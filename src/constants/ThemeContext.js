@@ -5,26 +5,32 @@ const ThemeContext = createContext();
 
 export const ThemeProvider = ({ children }) => {
   const [colorTheme, setColorTheme] = useState('light');
+  const [textSize, setTextSize] = useState('Small');
 
-  // Load theme from storage
+  // Load theme and text size from storage
   useEffect(() => {
     (async () => {
       const storedTheme = await AsyncStorage.getItem('theme');
-      if (storedTheme) {
-        setColorTheme(storedTheme);
-      }
+      const storedTextSize = await AsyncStorage.getItem('textSize');
+      if (storedTheme) setColorTheme(storedTheme);
+      if (storedTextSize) setTextSize(storedTextSize);
     })();
   }, []);
 
   const toggleColorTheme = async () => {
     const newTheme = colorTheme === 'light' ? 'dark' : 'light';
     setColorTheme(newTheme);
-    // Save theme to storage
     await AsyncStorage.setItem('theme', newTheme);
   };
 
+  const toggleTextSize = async () => {
+    const newSize = textSize === 'Small' ? 'Large' : 'Small';
+    setTextSize(newSize);
+    await AsyncStorage.setItem('textSize', newSize);
+  };
+
   return (
-    <ThemeContext.Provider value={{ colorTheme, toggleColorTheme }}>
+    <ThemeContext.Provider value={{ colorTheme, toggleColorTheme, textSize, toggleTextSize }}>
       {children}
     </ThemeContext.Provider>
   );
