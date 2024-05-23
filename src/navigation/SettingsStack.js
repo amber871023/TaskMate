@@ -27,13 +27,13 @@ function SettingsStackScreen() {
           headerBackImage: () => (
             <Ionicons
               name="chevron-back-outline"
-              size={27}
+              size={30}
               color="#FAB81B"
-              pl={10}
+              paddingLeft={10}
             />),
           headerBackTitleVisible: false,
           headerStyle: {
-            backgroundColor: colorTheme === 'dark' ? "#2A2626" : "white",
+            backgroundColor: colorTheme === 'dark' ? "#2A2626" : "#F9F6F6",
           },
           headerTitleStyle: {
             fontSize: 20,

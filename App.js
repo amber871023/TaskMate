@@ -81,7 +81,7 @@ function AppContent({ handleCreateTaskPress, isModalVisible, handleCloseModal })
             />
             <Tab.Screen name="Settings" component={SettingsStack} options={{
               headerStyle: {
-                backgroundColor: colorTheme === 'dark' ? "#2A2626" : "white",
+                backgroundColor: colorTheme === 'dark' ? "#2A2626" : "#F9F6F6",
               },
               headerTitleStyle: {
                 color: "#CE5263",
