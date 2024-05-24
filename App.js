@@ -13,9 +13,9 @@ import CreateTaskButton from './src/components/CreateTaskButton';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import CreateTaskModal from './src/components/CreateTaskModal';
 import ThemeContext from './src/constants/ThemeContext';
+import Login from './src/screens/Login';
 
 const Tab = createBottomTabNavigator();
-
 const EmptyComponent = () => null;
 
 export default function App() {
@@ -42,65 +42,77 @@ export default function App() {
   );
 }
 
+
+
 function AppContent({ handleCreateTaskPress, isModalVisible, handleCloseModal }) {
   const { colorTheme } = useContext(ThemeContext);
+  const [isLoggedIn, setIsLoggedIn] = useState(true); // Track login state
+
+  const handleLogin = (data) => {
+    setIsLoggedIn(true);
+    // Additional login logic (e.g., storing token) can go here
+  };
 
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
       <View style={styles.container}>
         {Platform.OS === "ios" && <StatusBar barStyle="default" />}
-        <NavigationContainer>
-          <Tab.Navigator
-            screenOptions={({ route }) => ({
-              tabBarIcon: ({ color, size }) => {
-                let iconName;
-                if (route.name === 'Home') {
-                  iconName = 'home';
-                } else if (route.name === 'Settings') {
-                  iconName = 'cog';
-                }
-                return <FontAwesome5 name={iconName} size={24} color={color} />;
-              },
-              tabBarActiveTintColor: '#FFC700',
-              tabBarInactiveTintColor: '#f8f8f8',
-              tabBarStyle: {
-                backgroundColor: '#CE5263',
-              },
-              tabBarLabelStyle: {
-                fontSize: 16,
-                fontWeight: 'bold',
-              },
-              tabBarIconStyle: {
-                marginTop: 5,
-              },
-            })}
-          >
-            <Tab.Screen name="Home" component={HomeStack} options={{ headerShown: false }} />
-            <Tab.Screen
-              name="CreateTask"
-              component={EmptyComponent}
-              options={{
-                tabBarButton: () => (
-                  <CreateTaskButton onPress={handleCreateTaskPress} />
-                ),
-              }}
-            />
-            <Tab.Screen name="Settings" component={SettingsStack} options={{
-              headerStyle: {
-                backgroundColor: colorTheme === 'dark' ? "#2A2626" : "#F9F6F6",
-              },
-              headerTitleStyle: {
-                color: "#CE5263",
-                fontSize: 32,
-                fontWeight: "bold",
-                paddingLeft: 10,
-              },
-              headerTintColor: colorTheme === 'dark' ? "#DB7C2E" : "#CE5263",
-              headerTitleAlign: "left",
-            }} />
-          </Tab.Navigator>
-          <CreateTaskModal visible={isModalVisible} onClose={handleCloseModal} />
-        </NavigationContainer>
+        {isLoggedIn ? (
+          <NavigationContainer>
+            <Tab.Navigator
+              screenOptions={({ route }) => ({
+                tabBarIcon: ({ color, size }) => {
+                  let iconName;
+                  if (route.name === 'Home') {
+                    iconName = 'home';
+                  } else if (route.name === 'Settings') {
+                    iconName = 'cog';
+                  }
+                  return <FontAwesome5 name={iconName} size={24} color={color} />;
+                },
+                tabBarActiveTintColor: '#FFC700',
+                tabBarInactiveTintColor: '#f8f8f8',
+                tabBarStyle: {
+                  backgroundColor: '#CE5263',
+                },
+                tabBarLabelStyle: {
+                  fontSize: 16,
+                  fontWeight: 'bold',
+                },
+                tabBarIconStyle: {
+                  marginTop: 5,
+                },
+              })}
+            >
+              <Tab.Screen name="Home" component={HomeStack} options={{ headerShown: false }} />
+              <Tab.Screen
+                name="CreateTask"
+                component={EmptyComponent}
+                options={{
+                  tabBarButton: () => (
+                    <CreateTaskButton onPress={handleCreateTaskPress} />
+                  ),
+                }}
+              />
+              <Tab.Screen name="Settings" component={SettingsStack} options={{
+                headerStyle: {
+                  backgroundColor: colorTheme === 'dark' ? "#2A2626" : "#F9F6F6",
+                },
+                headerTitleStyle: {
+                  color: "#CE5263",
+                  fontSize: 32,
+                  fontWeight: "bold",
+                  paddingLeft: 10,
+                },
+                headerTintColor: colorTheme === 'dark' ? "#DB7C2E" : "#CE5263",
+                headerTitleAlign: "left",
+              }} />
+            </Tab.Navigator>
+            <CreateTaskModal visible={isModalVisible} onClose={handleCloseModal} />
+          </NavigationContainer>
+        ) : (
+          <Login onLogin={handleLogin} />
+        )}
       </View>
     </GestureHandlerRootView>
   );
