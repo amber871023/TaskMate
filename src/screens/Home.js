@@ -23,7 +23,7 @@ function Home({ navigation }) {
     { id: 1, text: 'Meeting w/ BBC', completed: true, date: '2024-05-23' },
     { id: 2, text: 'Hit the gym', completed: false, date: '2024-05-23' },
     { id: 3, text: 'Meeting w/ BBC', completed: true, date: '2024-05-24' },
-    { id: 4, text: 'Hit the gym', completed: false, date: '2024-05-23' },
+    { id: 4, text: 'Pay the rent', completed: false, date: '2024-05-23' },
     { id: 5, text: 'Hit the gym', completed: false, date: '2024-05-24' },
     { id: 6, text: 'Meeting w/ BBC', completed: true, date: '2024-05-23' },
     { id: 7, text: 'Meeting w/ BBC', completed: true, date: '2024-05-23' },
