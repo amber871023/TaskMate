@@ -12,7 +12,7 @@ function Settings({ navigation }) {
   const currentTextSizeStyle = textSize === 'Small' ? textStyles.smallText : textStyles.largeText;
 
   return (
-    <View style={[styles.container, { backgroundColor: colorTheme === 'dark' ? '#2A2626' : '#fff' }]}>
+    <View style={[styles.container, { backgroundColor: colorTheme === 'dark' ? '#2A2626' : '#F9F6F6' }]}>
       {/* Accessibility */}
       <Text style={styles.title}>Accessibility</Text>
       <View style={styles.setting}>

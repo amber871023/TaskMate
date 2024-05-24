@@ -11,7 +11,7 @@ function About() {
   const currentTextSizeStyle = textSize === 'Small' ? textStyles.smallText : textStyles.largeText;
 
   return (
-    <View style={[styles.container, { backgroundColor: colorTheme === 'dark' ? '#2A2626' : '#fff' }]}>
+    <View style={[styles.container, { backgroundColor: colorTheme === 'dark' ? '#2A2626' : '#F9F6F6' }]}>
       <Image source={require('../../assets/logo_text.png')} style={styles.logo} alt='logo text' />
       <Text style={[textStyles.heading, { color: colorTheme === 'dark' ? '#fff' : '#000' }]}>
         Welcome to TaskMate!

@@ -32,13 +32,19 @@ export default function App() {
   return (
     <GluestackUIProvider config={config}>
       <ThemeProvider>
-        <AppContent handleCreateTaskPress={handleCreateTaskPress} isModalVisible={isModalVisible} handleCloseModal={handleCloseModal} />
+        <AppContent
+          handleCreateTaskPress={handleCreateTaskPress}
+          isModalVisible={isModalVisible}
+          handleCloseModal={handleCloseModal}
+        />
       </ThemeProvider>
     </GluestackUIProvider>
   );
 }
+
 function AppContent({ handleCreateTaskPress, isModalVisible, handleCloseModal }) {
   const { colorTheme } = useContext(ThemeContext);
+
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
       <View style={styles.container}>
@@ -61,7 +67,7 @@ function AppContent({ handleCreateTaskPress, isModalVisible, handleCloseModal })
                 backgroundColor: '#CE5263',
               },
               tabBarLabelStyle: {
-                fontSize: 16, // Adjust the font size as needed
+                fontSize: 16,
                 fontWeight: 'bold',
               },
               tabBarIconStyle: {
@@ -76,12 +82,12 @@ function AppContent({ handleCreateTaskPress, isModalVisible, handleCloseModal })
               options={{
                 tabBarButton: () => (
                   <CreateTaskButton onPress={handleCreateTaskPress} />
-                )
+                ),
               }}
             />
             <Tab.Screen name="Settings" component={SettingsStack} options={{
               headerStyle: {
-                backgroundColor: colorTheme === 'dark' ? "#2A2626" : "white",
+                backgroundColor: colorTheme === 'dark' ? "#2A2626" : "#F9F6F6",
               },
               headerTitleStyle: {
                 color: "#CE5263",
@@ -99,6 +105,7 @@ function AppContent({ handleCreateTaskPress, isModalVisible, handleCloseModal })
     </GestureHandlerRootView>
   );
 }
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
