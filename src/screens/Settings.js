@@ -1,4 +1,3 @@
-// src/components/Settings.js
 import React, { useState, useContext } from 'react';
 import { StyleSheet, TouchableOpacity } from 'react-native';
 import { View, Text, Switch } from "@gluestack-ui/themed";

@@ -6,7 +6,7 @@ import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 const TaskMenu = ({ onEdit, onDelete }) => (
   <Menu
     placement="bottom end"
-    style={styles.menu} // Apply styles to the menu
+    style={styles.menu}
     trigger={({ ...triggerProps }) => {
       return (
         <Button {...triggerProps} bgColor='white'>

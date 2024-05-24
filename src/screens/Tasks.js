@@ -1,6 +1,6 @@
 import React, { useContext, useState } from 'react';
 import { StyleSheet, FlatList } from 'react-native';
-import { View, Text } from "@gluestack-ui/themed";
+import { View } from "@gluestack-ui/themed";
 import ThemeContext from '../constants/ThemeContext';
 import { TaskItem } from '../components/TaskItem'; // Import the TaskItem component
 

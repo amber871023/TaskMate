@@ -10,6 +10,7 @@ import { TaskItem } from '../components/TaskItem';
 function Home({ navigation }) {
   const { colorTheme, textSize } = useContext(ThemeContext);
   const [selectedDate, setSelectedDate] = useState(moment().format('YYYY-MM-DD'));
+  // Mark the selected date on the calendar
   const markedDates = {
     [selectedDate]: {
       selected: true,
@@ -61,7 +62,9 @@ function Home({ navigation }) {
 
   return (
     <GlobalLayout>
+      {/* Welcoming Header */}
       <Text fontSize={24} fontWeight={'bold'} my={10} color='#CE5263'>Hi, UserName</Text>
+      {/* Subheader and All Task button */}
       <HStack justifyContent='space-between' mb={10}>
         <Text style={[{ color: colorTheme === 'dark' ? '#fff' : '#000' }]} fontWeight={'bold'} fontSize={20}>
           {moment(selectedDate).isSame(moment(), 'day') ? "Today's Tasks" : `Tasks on ${moment(selectedDate).format('DD, MMM')}`}
@@ -83,6 +86,7 @@ function Home({ navigation }) {
           </ButtonText>
         </Button>
       </HStack>
+      {/* Calendar */}
       <View style={{ borderRadius: 15, overflow: 'hidden' }} mb={10}>
         <Calendar
           current={selectedDate}
@@ -99,6 +103,7 @@ function Home({ navigation }) {
           }}
         />
       </View>
+      {/* Todo Task list */}
       {incompleteTasks.length > 0 ? (
         <View height={'25%'}>
           <Text style={[styles.taskSectionHeader, { color: colorTheme === 'dark' ? '#fff' : '#a0a0a0' }]}>Todo Tasks</Text>
@@ -111,6 +116,7 @@ function Home({ navigation }) {
       ) : (
         <Text my={20} textAlign='center' color='#a0a0a0'>No tasks for this day</Text>
       )}
+      {/* Completed Task list */}
       {
         completedTasks.length > 0 && (
           <View height={'18%'}>

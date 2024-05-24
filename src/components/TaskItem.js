@@ -10,6 +10,7 @@ export const TaskItem = ({ item, handleTaskCompletion, handleEditTask, handleDel
   <Box style={styles.task} mb={10} backgroundColor='white' borderRadius={15}>
     <HStack justifyContent='space-between' alignItems='center'>
       <HStack alignItems='center'>
+        {/* Checkbox for tasks */}
         <TouchableOpacity onPress={() => handleTaskCompletion(item.id)}>
           <Ionicons
             name={item.completed ? 'checkbox-outline' : 'square-outline'}

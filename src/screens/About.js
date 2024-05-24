@@ -1,4 +1,3 @@
-// src/components/About.js
 import React, { useContext } from 'react';
 import { StyleSheet } from 'react-native';
 import { View, Text, Image } from "@gluestack-ui/themed";
@@ -16,6 +15,7 @@ function About() {
       <Text style={[textStyles.heading, { color: colorTheme === 'dark' ? '#fff' : '#000' }]}>
         Welcome to TaskMate!
       </Text>
+      {/*  Description of the app */}
       <Text style={[textStyles.subheading, currentTextSizeStyle, { color: colorTheme === 'dark' ? '#fff' : '#000' }]}>
         TaskMate is your ultimate productivity companion designed to help you manage your tasks and schedule with ease. Our application combines a powerful task manager with an intuitive calendar view, ensuring you stay on top of your commitments and deadlines.
       </Text>
