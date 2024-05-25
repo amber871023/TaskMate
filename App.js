@@ -46,11 +46,13 @@ export default function App() {
 
 function AppContent({ handleCreateTaskPress, isModalVisible, handleCloseModal }) {
   const { colorTheme } = useContext(ThemeContext);
-  const [isLoggedIn, setIsLoggedIn] = useState(true); // Track login state
+  const [isLoggedIn, setIsLoggedIn] = useState(false); // Track login state
+  const [username, setUsername] = useState('');
 
-  const handleLogin = (data) => {
+
+  const handleLogin = ({ username }) => {
     setIsLoggedIn(true);
-    // Additional login logic (e.g., storing token) can go here
+    setUsername(username);
   };
 
   return (
@@ -84,7 +86,7 @@ function AppContent({ handleCreateTaskPress, isModalVisible, handleCloseModal })
                 },
               })}
             >
-              <Tab.Screen name="Home" component={HomeStack} options={{ headerShown: false }} />
+              <Tab.Screen name="Home" children={() => <HomeStack username={username} />} options={{ headerShown: false }} />
               <Tab.Screen
                 name="CreateTask"
                 component={EmptyComponent}

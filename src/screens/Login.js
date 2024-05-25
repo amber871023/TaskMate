@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import { StyleSheet, TextInput } from 'react-native';
-import { View, Text, Button, Box, Image, Alert } from '@gluestack-ui/themed';
+import { Platform, StyleSheet, TextInput, Alert, TouchableOpacity } from 'react-native';
+import { View, Text, Button, Box, Image } from '@gluestack-ui/themed';
 import { GlobalLayout } from "../constants/GlobalLayout";
 
 export default function Login({ onLogin }) {
@@ -8,10 +8,12 @@ export default function Login({ onLogin }) {
   const [password, setPassword] = useState('');
   const [isRegister, setIsRegister] = useState(false); // Toggle between login and register
   const [email, setEmail] = useState('');
+  const basePlatformUrl = Platform.OS === 'android' ? 'http://10.0.2.2' : 'http://192.168.0.101';
 
   const handleSubmit = async () => {
-    const url = isRegister ? 'https://your-api-url.com/register' : 'https://your-api-url.com/auth';
-    const payload = isRegister ? { username, password, email } : { username, password };
+    const url = isRegister ? `${basePlatformUrl}:3000/users/register` : `http://192.168.0.101:3000/users/login`;
+
+    const payload = isRegister ? { username, password, email } : { email, password };
 
     try {
       const response = await fetch(url, {
@@ -27,9 +29,10 @@ export default function Login({ onLogin }) {
       }
 
       const data = await response.json();
-      onLogin(data);
+      onLogin({ username: data.username }); //the API response contains the username
     } catch (error) {
-      Alert.alert('Error', error.message); // Use Alert directly for simplicity
+      console.error(error);
+      Alert.alert('Error', error.message);
     }
   };
 
@@ -39,11 +42,19 @@ export default function Login({ onLogin }) {
         <Image source={require('../../assets/logo.png')} style={styles.logo} alt="logo" />
         <Text style={styles.title}>Welcome to TaskMate</Text>
         <TextInput
-          value={username}
-          onChangeText={setUsername}
-          placeholder="Username"
+          value={email}
+          onChangeText={setEmail}
+          placeholder="Email"
           style={styles.input}
         />
+        {isRegister && (
+          <TextInput
+            value={username}
+            onChangeText={setUsername}
+            placeholder="Username"
+            style={styles.input}
+          />
+        )}
         <TextInput
           value={password}
           onChangeText={setPassword}
@@ -51,19 +62,11 @@ export default function Login({ onLogin }) {
           secureTextEntry
           style={styles.input}
         />
-        {isRegister && (
-          <TextInput
-            value={email}
-            onChangeText={setEmail}
-            placeholder="Email"
-            style={styles.input}
-          />
-        )}
-        <Button onPress={handleSubmit} style={styles.button}>
+        <TouchableOpacity onPress={handleSubmit} style={styles.button}>
           <Text color='white' textAlign='center' fontWeight={'bold'} fontSize={20}>
             {isRegister ? "Register" : "Login"}
           </Text>
-        </Button>
+        </TouchableOpacity>
         <View style={styles.toggleContainer}>
           <Text>{isRegister ? "Already have an account?" : "Don't have an account?"}</Text>
           <Button onPress={() => setIsRegister(!isRegister)} bgColor='transparent'>
