@@ -13,7 +13,7 @@ function HomeStackScreen({ username }) {
     <HomeStack.Navigator initialRouteName={"home"}>
       <HomeStack.Screen
         name="home"
-        children={() => <Home username={username} />}
+        children={(props) => <Home {...props} username={username} />}
         options={{ headerShown: false }}
       />
       <HomeStack.Screen

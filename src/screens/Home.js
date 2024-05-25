@@ -91,7 +91,7 @@ function Home({ navigation, username }) {
           onDayPress={(day) => setSelectedDate(day.dateString)}
           markedDates={markedDates}
           style={{
-            height: 300
+            height: 305
           }}
           theme={{
             todayTextColor: '#DB7C2E',
