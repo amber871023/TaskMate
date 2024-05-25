@@ -20,7 +20,7 @@ function About() {
         TaskMate is your ultimate productivity companion designed to help you manage your tasks and schedule with ease. Our application combines a powerful task manager with an intuitive calendar view, ensuring you stay on top of your commitments and deadlines.
       </Text>
       <Text style={[textStyles.subheading, currentTextSizeStyle, { color: colorTheme === 'dark' ? '#fff' : '#000' }]}>
-        Our goal is to enhance your productivity by providing a seamless and efficient way to manage your daily tasks and long-term projects. Whether you're a student, a professional, or simply someone who wants to stay organized, TaskMate is here to help you achieve your goals.
+        Our goal is to enhance your productivity by providing a seamless and efficient way to manage your daily tasks. Whether you're a student, a professional, or simply someone who wants to stay organized, TaskMate is here to help you achieve your goals.
       </Text>
     </View>
   );

@@ -46,13 +46,17 @@ export default function App() {
 
 function AppContent({ handleCreateTaskPress, isModalVisible, handleCloseModal }) {
   const { colorTheme } = useContext(ThemeContext);
-  const [isLoggedIn, setIsLoggedIn] = useState(false); // Track login state
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [username, setUsername] = useState('');
-
 
   const handleLogin = ({ username }) => {
     setIsLoggedIn(true);
     setUsername(username);
+  };
+
+  const handleLogout = () => {
+    setIsLoggedIn(false);
+    setUsername('');
   };
 
   return (
@@ -67,7 +71,7 @@ function AppContent({ handleCreateTaskPress, isModalVisible, handleCloseModal })
                   let iconName;
                   if (route.name === 'Home') {
                     iconName = 'home';
-                  } else if (route.name === 'Settings') {
+                  } else if (route.name === 'settings') {
                     iconName = 'cog';
                   }
                   return <FontAwesome5 name={iconName} size={24} color={color} />;
@@ -86,7 +90,11 @@ function AppContent({ handleCreateTaskPress, isModalVisible, handleCloseModal })
                 },
               })}
             >
-              <Tab.Screen name="Home" children={() => <HomeStack username={username} />} options={{ headerShown: false }} />
+              <Tab.Screen
+                name="Home"
+                children={() => <HomeStack username={username} />}
+                options={{ headerShown: false }}
+              />
               <Tab.Screen
                 name="CreateTask"
                 component={EmptyComponent}
@@ -96,19 +104,12 @@ function AppContent({ handleCreateTaskPress, isModalVisible, handleCloseModal })
                   ),
                 }}
               />
-              <Tab.Screen name="Settings" component={SettingsStack} options={{
-                headerStyle: {
-                  backgroundColor: colorTheme === 'dark' ? "#2A2626" : "#F9F6F6",
-                },
-                headerTitleStyle: {
-                  color: "#CE5263",
-                  fontSize: 32,
-                  fontWeight: "bold",
-                  paddingLeft: 10,
-                },
-                headerTintColor: colorTheme === 'dark' ? "#DB7C2E" : "#CE5263",
-                headerTitleAlign: "left",
-              }} />
+              <Tab.Screen
+                name="settings"
+                options={{ headerShown: false }} // Hide the header only for the Settings screen
+              >
+                {props => <SettingsStack {...props} handleLogout={handleLogout} />}
+              </Tab.Screen>
             </Tab.Navigator>
             <CreateTaskModal visible={isModalVisible} onClose={handleCloseModal} />
           </NavigationContainer>

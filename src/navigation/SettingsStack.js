@@ -6,19 +6,31 @@ import OpenSourceLicenses from "../screens/OpenSourceLicenses";
 import { Ionicons } from "@expo/vector-icons";
 import ThemeContext from '../constants/ThemeContext';
 
-
 const SettingsStack = createStackNavigator();
 
-function SettingsStackScreen() {
+function SettingsStackScreen({ handleLogout }) {
   const { colorTheme } = useContext(ThemeContext);
-
   return (
-    <SettingsStack.Navigator initialRouteName="settings">
+    <SettingsStack.Navigator initialRouteName="Settings">
       <SettingsStack.Screen
-        name="settings"
-        component={Settings}
-        options={{ headerShown: false }}
-      />
+        name="Settings"
+        options={{
+          headerShown: true,
+          headerStyle: {
+            backgroundColor: colorTheme === 'dark' ? "#2A2626" : "#F9F6F6",
+          },
+          headerTitleStyle: {
+            color: "#CE5263",
+            fontSize: 32,
+            fontWeight: "bold",
+            paddingLeft: 10,
+          },
+          headerTintColor: colorTheme === 'dark' ? "#DB7C2E" : "#CE5263",
+          headerTitleAlign: "left",
+        }}
+      >
+        {props => <Settings {...props} handleLogout={handleLogout} />}
+      </SettingsStack.Screen>
       <SettingsStack.Screen
         name="About"
         component={About}
@@ -38,14 +50,9 @@ function SettingsStackScreen() {
           headerTitleStyle: {
             fontSize: 20,
             fontWeight: "bold",
-            color: colorTheme === 'dark' ? "white" : "dark",
+            color: "#CE5263",
           },
         }}
-      />
-      <SettingsStack.Screen
-        name="OpenSourceLicenses"
-        component={OpenSourceLicenses}
-        options={{ headerShown: true }}
       />
     </SettingsStack.Navigator>
   );
