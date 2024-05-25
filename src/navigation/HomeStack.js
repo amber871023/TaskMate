@@ -7,13 +7,13 @@ import { Ionicons } from "@expo/vector-icons";
 
 const HomeStack = createStackNavigator();
 
-function HomeStackScreen() {
+function HomeStackScreen({ username }) {
   const { colorTheme } = useContext(ThemeContext);
   return (
     <HomeStack.Navigator initialRouteName={"home"}>
       <HomeStack.Screen
         name="home"
-        component={Home}
+        children={() => <Home username={username} />}
         options={{ headerShown: false }}
       />
       <HomeStack.Screen

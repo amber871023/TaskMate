@@ -1,11 +1,11 @@
-import React, { useState, useContext } from 'react';
+import React, { useContext } from 'react';
 import { StyleSheet, TouchableOpacity } from 'react-native';
 import { View, Text, Switch } from "@gluestack-ui/themed";
 import ThemeContext from '../constants/ThemeContext';
 import { FontAwesome } from '@expo/vector-icons';
 import textStyles from '../constants/textStyles';
 
-function Settings({ navigation }) {
+function Settings({ navigation, handleLogout }) {
   const { colorTheme, toggleColorTheme, textSize, toggleTextSize } = useContext(ThemeContext);
 
   const currentTextSizeStyle = textSize === 'Small' ? textStyles.smallText : textStyles.largeText;
@@ -58,9 +58,12 @@ function Settings({ navigation }) {
         <FontAwesome name="angle-right" size={24} color="#CE5263" />
       </View>
 
-      <View style={styles.setting}>
+      <TouchableOpacity
+        style={styles.setting}
+        onPress={handleLogout}
+      >
         <Text style={[currentTextSizeStyle]} color='#CE5263'>Log out</Text>
-      </View>
+      </TouchableOpacity>
     </View>
   );
 }

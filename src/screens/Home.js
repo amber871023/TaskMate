@@ -7,10 +7,10 @@ import { GlobalLayout } from "../constants/GlobalLayout";
 import ThemeContext from '../constants/ThemeContext';
 import { TaskItem } from '../components/TaskItem';
 
-function Home({ navigation }) {
+function Home({ navigation, username }) {
   const { colorTheme, textSize } = useContext(ThemeContext);
   const [selectedDate, setSelectedDate] = useState(moment().format('YYYY-MM-DD'));
-  // Mark the selected date on the calendar
+
   const markedDates = {
     [selectedDate]: {
       selected: true,
@@ -28,8 +28,6 @@ function Home({ navigation }) {
     { id: 6, text: 'Meeting w/ BBC', completed: true, date: '2024-05-23' },
     { id: 7, text: 'Meeting w/ BBC', completed: true, date: '2024-05-23' },
     { id: 8, text: 'Hit the gym', completed: false, date: '2024-05-23' },
-
-
   ]);
 
   const handleTaskCompletion = (id) => {
@@ -52,7 +50,7 @@ function Home({ navigation }) {
       handleTaskCompletion={handleTaskCompletion}
       handleEditTask={handleEditTask}
       handleDeleteTask={handleDeleteTask}
-      textSize={textSize} //textSize is a prop passed to the component
+      textSize={textSize}
     />
   );
 
@@ -63,7 +61,7 @@ function Home({ navigation }) {
   return (
     <GlobalLayout>
       {/* Welcoming Header */}
-      <Text fontSize={24} fontWeight={'bold'} my={10} color='#CE5263'>Hi, UserName</Text>
+      <Text fontSize={24} fontWeight={'bold'} my={10} color='#CE5263'>Hi, {username}</Text>
       {/* Subheader and All Task button */}
       <HStack justifyContent='space-between' mb={10}>
         <Text style={[{ color: colorTheme === 'dark' ? '#fff' : '#000' }]} fontWeight={'bold'} fontSize={20}>
@@ -129,16 +127,15 @@ function Home({ navigation }) {
           </View>
         )
       }
-    </GlobalLayout >
+    </GlobalLayout>
   );
 }
 
 const styles = StyleSheet.create({
   taskSectionHeader: {
-    marginBottom: 10,
     fontSize: 18,
     fontWeight: 'bold',
-    marginLeft: 10,
+    marginBottom: 5,
   },
 });
 
