@@ -20,14 +20,14 @@ function Home({ navigation, username }) {
   };
 
   const [tasks, setTasks] = useState([
-    { id: 1, text: 'Meeting w/ BBC', completed: true, date: '2024-05-23' },
-    { id: 2, text: 'Hit the gym', completed: false, date: '2024-05-23' },
-    { id: 3, text: 'Meeting w/ BBC', completed: true, date: '2024-05-24' },
-    { id: 4, text: 'Pay the rent', completed: false, date: '2024-05-23' },
-    { id: 5, text: 'Hit the gym', completed: false, date: '2024-05-24' },
-    { id: 6, text: 'Meeting w/ BBC', completed: true, date: '2024-05-23' },
-    { id: 7, text: 'Meeting w/ BBC', completed: true, date: '2024-05-23' },
-    { id: 8, text: 'Hit the gym', completed: false, date: '2024-05-23' },
+    { id: 1, text: 'Meeting w/ BBC', color: '#CE5263', priority: 'high', completed: true, date: '2024-05-23' },
+    { id: 2, text: 'Hit the gym', color: '#62AAED', priority: 'low', completed: false, date: '2024-05-23' },
+    { id: 3, text: 'Meeting w/ BBC', color: '#FFB533', priority: 'medium', completed: true, date: '2024-05-24' },
+    { id: 4, text: 'Pay the rent', color: '#A9E877', priority: 'high', completed: false, date: '2024-05-23' },
+    { id: 5, text: 'Hit the gym', color: '#62AAED', priority: 'low', completed: false, date: '2024-05-24' },
+    { id: 6, text: 'Meeting w/ BBC', color: '#CE5263', priority: 'medium', completed: true, date: '2024-05-23' },
+    { id: 7, text: 'Meeting w/ BBC', color: '#5275CE', priority: 'low', completed: true, date: '2024-05-23' },
+    { id: 8, text: 'Hit the gym', color: '#8940D3', priority: 'high', completed: false, date: '2024-05-23' },
   ]);
 
   const handleTaskCompletion = (id) => {

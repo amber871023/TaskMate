@@ -1,35 +1,41 @@
 import React, { useState } from 'react';
-import { Modal, TextInput, Button, StyleSheet } from 'react-native';
-import { HStack, View, Text } from "@gluestack-ui/themed";
+import { Modal, TextInput, StyleSheet, TouchableOpacity } from 'react-native';
+import { HStack, View, Text, VStack, Button, ButtonText } from "@gluestack-ui/themed";
+import AntDesign from '@expo/vector-icons/AntDesign';
 import DateTimePicker from '@react-native-community/datetimepicker';
 
 const CreateTaskModal = ({ visible, onClose }) => {
   const [title, setTitle] = useState('');
   const [date, setDate] = useState(new Date());
-  const [color, setColor] = useState('');
+  const [selectedColor, setSelectedColor] = useState('');
+
+  const colors = ['#CE5263', '#FFB533', '#8DEF91', '#62AAED', '#5275CE', '#B571FA'];
+
   const handleSubmit = () => {
     // Validate the inputs
     if (!title) {
       alert('Please enter a task title');
       return;
     }
-    if (!color) {
+    if (!selectedColor) {
       alert('Please select a task color');
       return;
     }
     // Create the task
-    const task = { title, date, color };
+    const task = { title, date, color: selectedColor };
 
     // Do something with the task, like adding it to your state or sending it to a server
 
     // Clear the inputs
     setTitle('');
     setDate(new Date());
-    setColor('#000000');
+    setSelectedColor('');
 
     // Close the modal
     onClose();
   };
+
+
   return (
     <Modal
       transparent={true}
@@ -39,30 +45,54 @@ const CreateTaskModal = ({ visible, onClose }) => {
     >
       <View style={styles.modalContainer}>
         <View style={styles.modalContent}>
-          <HStack justifyContent='space-between'>
+          <HStack style={styles.modalHeader}>
             <Text style={styles.modalTitle}>Create Task</Text>
-            <Button title="close" onPress={onClose} />
+
+            <TouchableOpacity onPress={onClose} style={styles.iconButton}>
+              <AntDesign name="closesquareo" size={24} color="#938989" p={10} />
+            </TouchableOpacity>
           </HStack>
-          <TextInput
-            style={styles.input}
-            placeholder="Task Title"
-            value={title}
-            onChangeText={setTitle}
-          />
-          <DateTimePicker
-            value={date}
-            mode="date"
-            display="default"
-            onChange={(event, selectedDate) => setDate(selectedDate || date)}
-          />
-          <TextInput
-            style={styles.input}
-            placeholder="Task Color"
-            value={color}
-            onChangeText={setColor}
-          />
-          <HStack alignSelf='flex-end'>
-            <Button title="Add Task" color='#CE5263' onPress={handleSubmit} />
+          <VStack mb={20}>
+            <Text fontWeight={'bold'} mb={5}>Title</Text>
+            <TextInput
+              placeholder="Enter task here"
+              value={title}
+              onChangeText={setTitle}
+              fontSize={20}
+            />
+          </VStack>
+          <HStack alignItems='center' justifyContent='space-between' mb={20}>
+            <Text fontWeight={'bold'}>Date</Text>
+            <DateTimePicker
+              value={date}
+              mode="date"
+              display="default"
+              onChange={(event, selectedDate) => setDate(selectedDate || date)}
+            />
+          </HStack>
+          <HStack alignItems='center' justifyContent='space-between' mb={10}>
+            <Text fontWeight={'bold'}>Color</Text>
+            <HStack justifyContent="space-between" mb={10}>
+              {colors.map(color => (
+                <TouchableOpacity
+                  key={color}
+                  style={[
+                    styles.colorButton,
+                    { backgroundColor: color },
+                    selectedColor === color && styles.selectedColorButton
+                  ]}
+                  onPress={() => setSelectedColor(color)}
+                />
+              ))}
+            </HStack>
+          </HStack>
+          <HStack alignSelf='flex-end' mt={50}>
+            <TouchableOpacity
+              style={styles.saveButton}
+              onPress={handleSubmit}
+            >
+              <Text color='white' textAlign='center' fontWeight={'bold'}>Save</Text>
+            </TouchableOpacity>
           </HStack>
         </View>
       </View>
@@ -84,10 +114,37 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     width: '80%',
   },
-  modalTitle: {
-    fontSize: 18,
-    fontWeight: 'bold',
+  modalHeader: {
+    justifyContent: 'space-between',
     marginBottom: 20,
+    alignItems: 'center',
+  },
+  modalTitle: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    color: '#CE5263',
+  },
+  colorButton: {
+    width: 25,
+    height: 25,
+    borderRadius: 20,
+    marginHorizontal: 5,
+  },
+  selectedColorButton: {
+    borderWidth: 3,
+    borderColor: 'transparent',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.8,
+    shadowRadius: 2,
+    elevation: 5,
+  },
+  saveButton: {
+    backgroundColor: '#CE5263',
+    borderRadius: 5,
+    height: 35,
+    justifyContent: 'center',
+    paddingHorizontal: 20,
   },
 });
 

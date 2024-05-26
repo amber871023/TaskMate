@@ -46,7 +46,7 @@ export default function App() {
 
 function AppContent({ handleCreateTaskPress, isModalVisible, handleCloseModal }) {
   const { colorTheme } = useContext(ThemeContext);
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(true);
   const [username, setUsername] = useState('');
 
   const handleLogin = ({ username }) => {
