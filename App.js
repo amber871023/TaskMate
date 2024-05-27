@@ -20,11 +20,12 @@ const EmptyComponent = () => null;
 
 export default function App() {
   const [isModalVisible, setIsModalVisible] = useState(false);
+  const [token, setToken] = useState(null); // Initialize token state
 
+  //Create Task Modal
   const handleCreateTaskPress = () => {
     setIsModalVisible(true);
   };
-
   const handleCloseModal = () => {
     setIsModalVisible(false);
   };
@@ -42,21 +43,23 @@ export default function App() {
   );
 }
 
-
-
 function AppContent({ handleCreateTaskPress, isModalVisible, handleCloseModal }) {
   const { colorTheme } = useContext(ThemeContext);
-  const [isLoggedIn, setIsLoggedIn] = useState(true);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [username, setUsername] = useState('');
+  const [token, setToken] = useState(''); // Initialize token state
 
-  const handleLogin = ({ username }) => {
+  const handleLogin = ({ username, token }) => {
     setIsLoggedIn(true);
     setUsername(username);
+    setToken(token);
+    console.log("Token:", token);
   };
-
   const handleLogout = () => {
     setIsLoggedIn(false);
     setUsername('');
+    setToken('');
+
   };
 
   return (
@@ -92,7 +95,7 @@ function AppContent({ handleCreateTaskPress, isModalVisible, handleCloseModal })
             >
               <Tab.Screen
                 name="Home"
-                children={() => <HomeStack username={username} />}
+                children={() => <HomeStack username={username} token={token} />}
                 options={{ headerShown: false }}
               />
               <Tab.Screen
@@ -100,7 +103,7 @@ function AppContent({ handleCreateTaskPress, isModalVisible, handleCloseModal })
                 component={EmptyComponent}
                 options={{
                   tabBarButton: () => (
-                    <CreateTaskButton onPress={handleCreateTaskPress} />
+                    <CreateTaskButton onPress={handleCreateTaskPress} token={token} />
                   ),
                 }}
               />
@@ -111,7 +114,7 @@ function AppContent({ handleCreateTaskPress, isModalVisible, handleCloseModal })
                 {props => <SettingsStack {...props} handleLogout={handleLogout} />}
               </Tab.Screen>
             </Tab.Navigator>
-            <CreateTaskModal visible={isModalVisible} onClose={handleCloseModal} />
+            <CreateTaskModal visible={isModalVisible} onClose={handleCloseModal} token={token} />
           </NavigationContainer>
         ) : (
           <Login onLogin={handleLogin} />

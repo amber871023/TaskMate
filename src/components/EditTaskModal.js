@@ -1,24 +1,17 @@
-import React, { useState } from 'react';
-import { Modal, TextInput, StyleSheet, TouchableOpacity, Alert, Platform } from 'react-native';
-import { HStack, View, Text, VStack } from "@gluestack-ui/themed";
+import React, { useState, useEffect } from 'react';
+import { Modal, TextInput, StyleSheet, TouchableOpacity } from 'react-native';
+import { HStack, View, Text, VStack, Button, ButtonText } from "@gluestack-ui/themed";
 import AntDesign from '@expo/vector-icons/AntDesign';
 import DateTimePicker from '@react-native-community/datetimepicker';
 
-const CreateTaskModal = ({ visible, onClose, token }) => {
-  const [title, setTitle] = useState('');
-  const [date, setDate] = useState(new Date());
-  const [selectedColor, setSelectedColor] = useState('');
-  const [priority, setPriority] = useState('');
-  const [selectOpen, setSelectOpen] = useState(false);
-
+const EditTaskModal = ({ visible, onClose, taskData, onSubmit }) => {
+  const [title, setTitle] = useState(taskData.title || '');
+  const [date, setDate] = useState(taskData.date ? new Date(taskData.date) : new Date());
+  const [selectedColor, setSelectedColor] = useState(taskData.color || '');
 
   const colors = ['#CE5263', '#FFB533', '#8DEF91', '#62AAED', '#5275CE', '#B571FA'];
-  const priorities = ['High', 'Medium', 'Low'];
 
-  const basePlatformUrl = Platform.OS === 'android' ? 'http://10.0.2.2' : 'http://192.168.0.101';
-  const url = `${basePlatformUrl}:3000/users/tasks`;
-
-  const handleSubmit = async () => {
+  const handleSubmit = () => {
     // Validate the inputs
     if (!title) {
       alert('Please enter a task title');
@@ -28,47 +21,18 @@ const CreateTaskModal = ({ visible, onClose, token }) => {
       alert('Please select a task color');
       return;
     }
-    if (!priority) {
-      alert('Please select a task priority');
-      return;
-    }
-
-    // Format the date to 'YYYY-MM-DD'
-    const formattedDate = date.toISOString().split('T')[0];
     // Create the task
-    const task = { title, date: formattedDate, color: selectedColor, priority, completed: 0 };
+    const task = { title, date, color: selectedColor };
 
-    try {
-      const response = await fetch(url, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`
-        },
-        body: JSON.stringify(task),
-      });
-      if (response.status === 401) {
-        throw new Error('Authorization failed');
-      }
-      if (!response.ok) {
-        throw new Error('Task creation failed');
-      }
+    // Do something with the task, like adding it to your state or sending it to a server
 
-      const data = await response.json();
-      console.log('Task created:', data);
+    // Clear the inputs
+    setTitle('');
+    setDate(new Date());
+    setSelectedColor('');
 
-      // Clear the inputs
-      setTitle('');
-      setDate(new Date());
-      setSelectedColor('');
-      setPriority('');
-
-      // Close the modal
-      onClose();
-    } catch (error) {
-      console.error(error);
-      Alert.alert('Error', error.message);
-    }
+    // Close the modal
+    onClose();
   };
 
   return (
@@ -81,7 +45,7 @@ const CreateTaskModal = ({ visible, onClose, token }) => {
       <View style={styles.modalContainer}>
         <View style={styles.modalContent}>
           <HStack style={styles.modalHeader}>
-            <Text style={styles.modalTitle}>Create Task</Text>
+            <Text style={styles.modalTitle}>Edit Task</Text>
 
             <TouchableOpacity onPress={onClose} style={styles.iconButton}>
               <AntDesign name="closesquareo" size={24} color="#938989" p={10} />
@@ -94,7 +58,6 @@ const CreateTaskModal = ({ visible, onClose, token }) => {
               value={title}
               onChangeText={setTitle}
               fontSize={20}
-              style={styles.textInput}
             />
           </VStack>
           <HStack alignItems='center' justifyContent='space-between' mb={20}>
@@ -122,27 +85,6 @@ const CreateTaskModal = ({ visible, onClose, token }) => {
               ))}
             </HStack>
           </HStack>
-          <HStack alignItems='center' justifyContent='space-between' mb={20}>
-            <Text fontWeight={'bold'}>Priority</Text>
-            <TouchableOpacity onPress={() => setSelectOpen(!selectOpen)} style={styles.select}>
-              <Text textAlign='right' pr={10} fontWeight={'bold'}>{priority || 'Select priority'}</Text>
-            </TouchableOpacity>
-          </HStack>
-          {selectOpen && (
-            <VStack style={styles.selectOptions}>
-              {priorities.map((item) => (
-                <TouchableOpacity
-                  key={item}
-                  onPress={() => {
-                    setPriority(item);
-                    setSelectOpen(false);
-                  }}
-                >
-                  <Text textAlign='right' pb={3}>{item}</Text>
-                </TouchableOpacity>
-              ))}
-            </VStack>
-          )}
           <HStack alignSelf='flex-end' mt={50}>
             <TouchableOpacity
               style={styles.saveButton}
@@ -165,6 +107,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(0,0,0,0.5)',
   },
   modalContent: {
+    width: 300,
     padding: 20,
     backgroundColor: 'white',
     borderRadius: 10,
@@ -202,31 +145,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     paddingHorizontal: 20,
   },
-  textInput: {
-    borderWidth: 1,
-    borderColor: '#ccc',
-    padding: 10,
-    borderRadius: 5,
-  },
-  select: {
-    borderRadius: 10,
-    backgroundColor: '#F1F0F0',
-    position: 'relative',
-    paddingVertical: 8,
-    width: '40%',
-  }, selectOptions: {
-    position: 'absolute',
-    bottom: 45,
-    right: 20,
-    backgroundColor: 'white',
-    borderRadius: 5,
-    borderWidth: 1,
-    borderColor: '#ccc',
-    paddingHorizontal: 10,
-    paddingTop: 10,
-    zIndex: 999,
-    width: '40%',
-  },
 });
 
-export default CreateTaskModal;
+export default EditTaskModal;

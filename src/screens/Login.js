@@ -11,7 +11,7 @@ export default function Login({ onLogin }) {
   const basePlatformUrl = Platform.OS === 'android' ? 'http://10.0.2.2' : 'http://192.168.0.101';
 
   const handleSubmit = async () => {
-    const url = isRegister ? `${basePlatformUrl}:3000/users/register` : `http://192.168.0.101:3000/users/login`;
+    const url = isRegister ? `${basePlatformUrl}:3000/users/register` : `${basePlatformUrl}:3000/users/login`;
 
     const payload = isRegister ? { username, password, email } : { email, password };
 
@@ -29,7 +29,7 @@ export default function Login({ onLogin }) {
       }
 
       const data = await response.json();
-      onLogin({ username: data.username }); //the API response contains the username
+      onLogin({ username: data.username, token: data.token }); //the API response contains the username
     } catch (error) {
       console.error(error);
       Alert.alert('Error', error.message);

@@ -10,14 +10,14 @@ function AllTasks() {
   const { colorTheme, textSize } = useContext(ThemeContext);
 
   const [tasks, setTasks] = useState([
-    { id: 1, text: 'Meeting w/ BBC', color: '#CE5263', priority: 'high', completed: true, date: '2024-05-23' },
-    { id: 2, text: 'Hit the gym', color: '#62AAED', priority: 'low', completed: false, date: '2024-05-23' },
-    { id: 3, text: 'Meeting w/ BBC', color: '#FFB533', priority: 'medium', completed: true, date: '2024-05-24' },
-    { id: 4, text: 'Pay the rent', color: '#A9E877', priority: 'high', completed: false, date: '2024-05-23' },
-    { id: 5, text: 'Hit the gym', color: '#62AAED', priority: 'low', completed: false, date: '2024-05-24' },
-    { id: 6, text: 'Meeting w/ BBC', color: '#CE5263', priority: 'medium', completed: true, date: '2024-05-23' },
-    { id: 7, text: 'Meeting w/ BBC', color: '#5275CE', priority: 'low', completed: true, date: '2024-05-23' },
-    { id: 8, text: 'Hit the gym', color: '#8940D3', priority: 'high', completed: false, date: '2024-05-23' },
+    { id: 1, title: 'Testing w/ BBC', color: '#CE5263', priority: 'high', completed: true, date: '2024-05-28T05:18:00.000Z' },
+    { id: 2, title: 'Hit the gym', color: '#62AAED', priority: 'low', completed: false, date: '2024-05-23' },
+    { id: 3, title: 'Meeting w/ BBC', color: '#FFB533', priority: 'medium', completed: true, date: '2024-05-24' },
+    { id: 4, title: 'Pay the rent', color: '#A9E877', priority: 'high', completed: false, date: '2024-05-23' },
+    { id: 5, title: 'Hit the gym', color: '#62AAED', priority: 'low', completed: false, date: '2024-05-24' },
+    { id: 6, title: 'Meeting w/ BBC', color: '#CE5263', priority: 'medium', completed: true, date: '2024-05-23' },
+    { id: 7, title: 'Meeting w/ BBC', color: '#5275CE', priority: 'low', completed: true, date: '2024-05-23' },
+    { id: 8, title: 'Hit the gym', color: '#8940D3', priority: 'high', completed: false, date: '2024-05-23' },
   ].sort((a, b) => new Date(b.date) - new Date(a.date)));
 
   const [currentTappedItemId, setCurrentTappedItemId] = useState(null);
@@ -76,6 +76,7 @@ function AllTasks() {
             key={item.id}
             item={item}
             onPress={() => handleTap(item.id)}
+            handleTaskCompletion={handleTaskCompletion}
             handleEditTask={handleEditTask}
             handleDeleteTask={handleDeleteTask}
             textSize={textSize}

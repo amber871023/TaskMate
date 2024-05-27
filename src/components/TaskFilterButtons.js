@@ -15,12 +15,11 @@ const TaskFilterButtons = ({ onTodoPress, onCompletedPress, filter }) => (
   </View>
 );
 
-
 const styles = StyleSheet.create({
   container: {
     flexDirection: 'row',
     justifyContent: 'space-around',
-    marginBottom: 10,
+    marginBottom: 20,
   },
   filterButton: {
     width: 190,
