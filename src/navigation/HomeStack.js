@@ -18,7 +18,7 @@ function HomeStackScreen({ username, token }) {
       />
       <HomeStack.Screen
         name="Tasks"
-        component={Tasks}
+        children={(props) => <Tasks {...props} token={token} />}
         options={{
           headerShown: true,
           headerBackImage: () => (

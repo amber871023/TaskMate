@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react';
-import { Modal, TextInput, StyleSheet, TouchableOpacity } from 'react-native';
-import { HStack, View, Text, VStack, Button, ButtonText } from "@gluestack-ui/themed";
+import React, { useState } from 'react';
+import { Modal, TextInput, StyleSheet, TouchableOpacity, Platform } from 'react-native';
+import { HStack, View, Text, VStack } from "@gluestack-ui/themed";
 import AntDesign from '@expo/vector-icons/AntDesign';
 import DateTimePicker from '@react-native-community/datetimepicker';
 
@@ -8,11 +8,15 @@ const EditTaskModal = ({ visible, onClose, taskData, onSubmit }) => {
   const [title, setTitle] = useState(taskData.title || '');
   const [date, setDate] = useState(taskData.date ? new Date(taskData.date) : new Date());
   const [selectedColor, setSelectedColor] = useState(taskData.color || '');
+  const [priority, setPriority] = useState(taskData.priority || '');
+  const [selectOpen, setSelectOpen] = useState(false);
+  const [completed, setCompleted] = useState(taskData.completed || 0);
+  const [id, setId] = useState(taskData.id || 0);
+  const [showDatePicker, setShowDatePicker] = useState(false);
 
-  const colors = ['#CE5263', '#FFB533', '#8DEF91', '#62AAED', '#5275CE', '#B571FA'];
+  const colors = ['#CE5263', '#FFB533', '#58AD60', '#62AAED', '#5275CE', '#B571FA'];
 
-  const handleSubmit = () => {
-    // Validate the inputs
+  const saveChanges = () => {
     if (!title) {
       alert('Please enter a task title');
       return;
@@ -21,18 +25,32 @@ const EditTaskModal = ({ visible, onClose, taskData, onSubmit }) => {
       alert('Please select a task color');
       return;
     }
-    // Create the task
-    const task = { title, date, color: selectedColor };
-
-    // Do something with the task, like adding it to your state or sending it to a server
-
-    // Clear the inputs
-    setTitle('');
-    setDate(new Date());
-    setSelectedColor('');
-
-    // Close the modal
+    if (!priority) {
+      alert('Please select a task priority');
+      return;
+    }
+    // Format the date to 'YYYY-MM-DD'
+    console.log("12", date);
+    date.setDate(date.getDate() + 1);
+    const formattedDate = date.toISOString().split('T')[0];
+    const editedTask = {
+      id, title, color: selectedColor, priority, completed, date: formattedDate
+    };
+    onSubmit(editedTask);
     onClose();
+  };
+
+  const handleDateChange = (event, selectedDate) => {
+    if (Platform.OS === 'android') {
+      if (event.type === 'set') {
+        const currentDate = selectedDate || date;
+        setDate(currentDate);
+      }
+      setShowDatePicker(false); // Hide the date/time picker for Android
+    } else {
+      const currentDate = selectedDate || date;
+      setDate(currentDate);
+    }
   };
 
   return (
@@ -46,9 +64,8 @@ const EditTaskModal = ({ visible, onClose, taskData, onSubmit }) => {
         <View style={styles.modalContent}>
           <HStack style={styles.modalHeader}>
             <Text style={styles.modalTitle}>Edit Task</Text>
-
             <TouchableOpacity onPress={onClose} style={styles.iconButton}>
-              <AntDesign name="closesquareo" size={24} color="#938989" p={10} />
+              <AntDesign name="closesquareo" size={24} color="#938989" />
             </TouchableOpacity>
           </HStack>
           <VStack mb={20}>
@@ -62,12 +79,26 @@ const EditTaskModal = ({ visible, onClose, taskData, onSubmit }) => {
           </VStack>
           <HStack alignItems='center' justifyContent='space-between' mb={20}>
             <Text fontWeight={'bold'}>Date</Text>
-            <DateTimePicker
-              value={date}
-              mode="date"
-              display="default"
-              onChange={(event, selectedDate) => setDate(selectedDate || date)}
-            />
+            {Platform.OS === 'android' && (
+              <TouchableOpacity onPress={() => setShowDatePicker(true)} style={styles.dateButton}>
+                <Text>{date.toDateString()}</Text>
+              </TouchableOpacity>
+            )}
+            {showDatePicker && (
+              <DateTimePicker
+                value={date}
+                mode="date"
+                onChange={handleDateChange}
+              />
+            )}
+            {Platform.OS === 'ios' && (
+              <DateTimePicker
+                value={date}
+                mode="date"
+                display="default"
+                onChange={handleDateChange}
+              />
+            )}
           </HStack>
           <HStack alignItems='center' justifyContent='space-between' mb={10}>
             <Text fontWeight={'bold'}>Color</Text>
@@ -85,10 +116,31 @@ const EditTaskModal = ({ visible, onClose, taskData, onSubmit }) => {
               ))}
             </HStack>
           </HStack>
+          <HStack alignItems='center' justifyContent='space-between' mb={20}>
+            <Text fontWeight={'bold'}>Priority</Text>
+            <TouchableOpacity onPress={() => setSelectOpen(!selectOpen)} style={styles.select}>
+              <Text textAlign='right' pr={10} fontWeight={'bold'}>{priority || 'Select priority'}</Text>
+            </TouchableOpacity>
+          </HStack>
+          {selectOpen && (
+            <VStack style={styles.selectOptions}>
+              {priorities.map((item) => (
+                <TouchableOpacity
+                  key={item}
+                  onPress={() => {
+                    setPriority(item);
+                    setSelectOpen(false);
+                  }}
+                >
+                  <Text textAlign='right' pb={3}>{item}</Text>
+                </TouchableOpacity>
+              ))}
+            </VStack>
+          )}
           <HStack alignSelf='flex-end' mt={50}>
             <TouchableOpacity
               style={styles.saveButton}
-              onPress={handleSubmit}
+              onPress={saveChanges}
             >
               <Text color='white' textAlign='center' fontWeight={'bold'}>Save</Text>
             </TouchableOpacity>
@@ -107,7 +159,6 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(0,0,0,0.5)',
   },
   modalContent: {
-    width: 300,
     padding: 20,
     backgroundColor: 'white',
     borderRadius: 10,
@@ -144,6 +195,31 @@ const styles = StyleSheet.create({
     height: 35,
     justifyContent: 'center',
     paddingHorizontal: 20,
+  },
+  textInput: {
+    borderWidth: 1,
+    borderColor: '#ccc',
+    padding: 10,
+    borderRadius: 5,
+  },
+  select: {
+    borderRadius: 10,
+    backgroundColor: '#F1F0F0',
+    position: 'relative',
+    paddingVertical: 8,
+    width: '40%',
+  }, selectOptions: {
+    position: 'absolute',
+    bottom: 45,
+    right: 20,
+    backgroundColor: 'white',
+    borderRadius: 5,
+    borderWidth: 1,
+    borderColor: '#ccc',
+    paddingHorizontal: 10,
+    paddingTop: 10,
+    zIndex: 999,
+    width: '40%',
   },
 });
 

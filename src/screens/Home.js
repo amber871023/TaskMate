@@ -5,94 +5,78 @@ import { Calendar } from 'react-native-calendars';
 import moment from 'moment';
 import { GlobalLayout } from "../constants/GlobalLayout";
 import ThemeContext from '../constants/ThemeContext';
-import { TaskItem } from '../components/TaskItem';
+import TaskItem from '../components/TaskItem';
 
 function Home({ navigation, username, token }) {
   const { colorTheme, textSize } = useContext(ThemeContext);
   const [selectedDate, setSelectedDate] = useState(moment().format('YYYY-MM-DD'));
   const [tasks, setTasks] = useState({ todoTasks: [], completedTasks: [] });
-
-  const markedDates = {
-    [selectedDate]: {
-      selected: true,
-      selectedColor: '#FAB81B',
-      selectedTextColor: '#fff',
-    },
-  };
+  const [markedDates, setMarkedDates] = useState({});
 
   const basePlatformUrl = Platform.OS === 'android' ? 'http://10.0.2.2' : 'http://192.168.0.101';
 
   const fetchTasks = async () => {
     try {
-      const todoTasksResponse = await fetch(`${basePlatformUrl}:3000/users/tasks/todo`, {
+      const response = await fetch(`${basePlatformUrl}:3000/users/tasks`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
       });
-      const todoTasksData = await todoTasksResponse.json();
+      if (response.status === 304) {
+        // Handle the case where the data has not been modified
+        console.log("Tasks not modified");
+        return;
+      }
 
-      const completedTasksResponse = await fetch(`${basePlatformUrl}:3000/users/tasks/completed`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
+      const data = await response.json();
+      const taskMarkedDates = {};
+
+      data.forEach(task => {
+        const taskDate = moment(task.date).format('YYYY-MM-DD');
+        if (!taskMarkedDates[taskDate]) {
+          taskMarkedDates[taskDate] = { marked: true, dotColor: '#CE5263' };
+        }
+      });
+
+      const todoTasks = data.filter(task => {
+        const taskDate = moment(task.date).format('YYYY-MM-DD');
+        return !task.completed && taskDate === selectedDate;
+      });
+
+      const completedTasks = data.filter(task => {
+        const taskDate = moment(task.date).format('YYYY-MM-DD');
+        return task.completed && taskDate === selectedDate;
+      });
+
+      // Update the markedDates with the selectedDate marking
+      setMarkedDates({
+        ...taskMarkedDates,
+        [selectedDate]: {
+          selected: true,
+          selectedColor: '#FAB81B',
+          selectedTextColor: '#fff',
+          marked: true,
         },
       });
-      const completedTasksData = await completedTasksResponse.json();
-
-      setTasks({ todoTasks: todoTasksData, completedTasks: completedTasksData });
+      setTasks({ todoTasks, completedTasks });
     } catch (error) {
-      console.error('Error fetching tasks:', error);
+      console.error('Error fetching tasks on Home screen:', error);
       Alert.alert('Error', 'Failed to fetch tasks. Please try again later.');
     }
   };
 
   useEffect(() => {
-    fetchTasks();
-  }, []);
-
-  const handleTaskCompletion = async (id) => {
-    try {
-      const updatedTask = tasks.todoTasks.find(task => task.id === id);
-      updatedTask.completed = !updatedTask.completed;
-
-      const response = await fetch(`${basePlatformUrl}:3000/users/tasks/${id}/completed`, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify({ completed: updatedTask.completed }),
-      });
-
-      if (!response.ok) {
-        throw new Error('Failed to update task completed status');
-      }
-
-      setTasks(prevState => ({
-        ...prevState,
-        todoTasks: prevState.todoTasks.map(task => (task.id === id ? updatedTask : task)),
-      }));
-    } catch (error) {
-      console.error('Error updating task completed status:', error);
-      Alert.alert('Error', 'Failed to update task completion status. Please try again later.');
+    if (token) {
+      fetchTasks();
     }
-  };
-
-  const handleEditTask = (id) => {
-    console.log(`Editing task ${id}`);
-  };
-
-  const handleDeleteTask = (id) => {
-    console.log(`Deleting task ${id}`);
-  };
+  }, [token, selectedDate]);
 
   const renderTask = ({ item }) => (
     <TaskItem
       item={item}
-      handleTaskCompletion={handleTaskCompletion}
-      handleEditTask={handleEditTask}
-      handleDeleteTask={handleDeleteTask}
       textSize={textSize}
       token={token}
+      fetchTasks={fetchTasks}
     />
   );
 
@@ -121,22 +105,32 @@ function Home({ navigation, username, token }) {
           current={selectedDate}
           onDayPress={(day) => setSelectedDate(day.dateString)}
           markedDates={markedDates}
-          style={{ height: 305 }}
+          style={{ height: 310 }}
           theme={{ todayTextColor: '#DB7C2E', selectedDayTextColor: '#DB7C2E', arrowColor: '#DB7C2E', textSectionTitleColor: '#CE5263' }}
         />
       </View>
       {todoTasks.length > 0 ? (
-        <View height={'25%'}>
-          <Text style={[styles.taskSectionHeader, { color: colorTheme === 'dark' ? '#fff' : '#a0a0a0' }]}>Todo Tasks</Text>
-          <FlatList data={todoTasks} renderItem={renderTask} keyExtractor={(item) => item.id.toString()} />
+        <View height={'40%'} flex={1}>
+          <Text fontWeight={'bold'} fontSize={20} mb={10}>Todo Tasks</Text>
+          <FlatList
+            data={todoTasks}
+            keyExtractor={(item) => item.id.toString()}
+            renderItem={renderTask}
+            showsVerticalScrollIndicator={false}
+          />
         </View>
       ) : (
-        <Text my={20} textAlign='center' color='#a0a0a0'>No tasks for this day</Text>
+        <Text textAlign='center' my={40}>No tasks for today</Text>
       )}
       {completedTasks.length > 0 && (
-        <View height={'18%'}>
-          <Text mt={5} style={[styles.taskSectionHeader, { color: colorTheme === 'dark' ? '#fff' : '#a0a0a0' }]}>Completed Tasks</Text>
-          <FlatList data={completedTasks} renderItem={renderTask} keyExtractor={(item) => item.id.toString()} />
+        <View mt={10} flex={1}>
+          <Text fontWeight={'bold'} fontSize={20} mb={10}>Completed Tasks</Text>
+          <FlatList
+            data={completedTasks}
+            keyExtractor={(item) => item.id.toString()}
+            renderItem={renderTask}
+            showsVerticalScrollIndicator={false}
+          />
         </View>
       )}
     </GlobalLayout>
@@ -144,7 +138,11 @@ function Home({ navigation, username, token }) {
 }
 
 const styles = StyleSheet.create({
-  taskSectionHeader: { fontSize: 18, fontWeight: 'bold', marginBottom: 5 },
+  container: {
+    flex: 1,
+    backgroundColor: '#fff',
+    padding: 10,
+  },
 });
 
 export default Home;

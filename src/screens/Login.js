@@ -24,12 +24,15 @@ export default function Login({ onLogin }) {
         body: JSON.stringify(payload),
       });
 
+      const data = await response.json();
+
       if (!response.ok) {
-        throw new Error(isRegister ? 'Registration failed' : 'Login failed');
+        const errorMessage = data.msg || (isRegister ? 'Registration failed' : 'Login failed');
+        throw new Error(errorMessage);
+
       }
 
-      const data = await response.json();
-      onLogin({ username: data.username, token: data.token }); //the API response contains the username
+      onLogin({ username: data.username, token: data.token });
     } catch (error) {
       console.error(error);
       Alert.alert('Error', error.message);

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Modal, TextInput, StyleSheet, TouchableOpacity, Alert, Platform } from 'react-native';
-import { HStack, View, Text, VStack } from "@gluestack-ui/themed";
+import { HStack, View, Text, VStack, Button } from "@gluestack-ui/themed";
 import AntDesign from '@expo/vector-icons/AntDesign';
 import DateTimePicker from '@react-native-community/datetimepicker';
 
@@ -10,9 +10,9 @@ const CreateTaskModal = ({ visible, onClose, token }) => {
   const [selectedColor, setSelectedColor] = useState('');
   const [priority, setPriority] = useState('');
   const [selectOpen, setSelectOpen] = useState(false);
+  const [showDatePicker, setShowDatePicker] = useState(false);
 
-
-  const colors = ['#CE5263', '#FFB533', '#8DEF91', '#62AAED', '#5275CE', '#B571FA'];
+  const colors = ['#CE5263', '#FFB533', '#58AD60', '#62AAED', '#5275CE', '#B571FA'];
   const priorities = ['High', 'Medium', 'Low'];
 
   const basePlatformUrl = Platform.OS === 'android' ? 'http://10.0.2.2' : 'http://192.168.0.101';
@@ -35,6 +35,7 @@ const CreateTaskModal = ({ visible, onClose, token }) => {
 
     // Format the date to 'YYYY-MM-DD'
     const formattedDate = date.toISOString().split('T')[0];
+
     // Create the task
     const task = { title, date: formattedDate, color: selectedColor, priority, completed: 0 };
 
@@ -65,9 +66,23 @@ const CreateTaskModal = ({ visible, onClose, token }) => {
 
       // Close the modal
       onClose();
+
     } catch (error) {
       console.error(error);
       Alert.alert('Error', error.message);
+    }
+  };
+
+  const handleDateChange = (event, selectedDate) => {
+    if (Platform.OS === 'android') {
+      if (event.type === 'set') {
+        const currentDate = selectedDate || date;
+        setDate(currentDate);
+      }
+      setShowDatePicker(false); // Hide the date/time picker for Android
+    } else {
+      const currentDate = selectedDate || date;
+      setDate(currentDate);
     }
   };
 
@@ -83,8 +98,8 @@ const CreateTaskModal = ({ visible, onClose, token }) => {
           <HStack style={styles.modalHeader}>
             <Text style={styles.modalTitle}>Create Task</Text>
 
-            <TouchableOpacity onPress={onClose} style={styles.iconButton}>
-              <AntDesign name="closesquareo" size={24} color="#938989" p={10} />
+            <TouchableOpacity onPress={onClose} padding={10}>
+              <AntDesign name="closesquareo" size={24} color="#938989" />
             </TouchableOpacity>
           </HStack>
           <VStack mb={20}>
@@ -99,12 +114,26 @@ const CreateTaskModal = ({ visible, onClose, token }) => {
           </VStack>
           <HStack alignItems='center' justifyContent='space-between' mb={20}>
             <Text fontWeight={'bold'}>Date</Text>
-            <DateTimePicker
-              value={date}
-              mode="date"
-              display="default"
-              onChange={(event, selectedDate) => setDate(selectedDate || date)}
-            />
+            {Platform.OS === 'android' && (
+              <TouchableOpacity onPress={() => setShowDatePicker(true)} style={styles.dateButton}>
+                <Text>{date.toDateString()}</Text>
+              </TouchableOpacity>
+            )}
+            {showDatePicker && (
+              <DateTimePicker
+                value={date}
+                mode="date"
+                onChange={handleDateChange}
+              />
+            )}
+            {Platform.OS === 'ios' && (
+              <DateTimePicker
+                value={date}
+                mode="date"
+                display="default"
+                onChange={handleDateChange}
+              />
+            )}
           </HStack>
           <HStack alignItems='center' justifyContent='space-between' mb={10}>
             <Text fontWeight={'bold'}>Color</Text>
@@ -180,6 +209,17 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     color: '#CE5263',
   },
+  textInput: {
+    borderWidth: 1,
+    borderColor: '#ccc',
+    padding: 10,
+    borderRadius: 5,
+  },
+  dateButton: {
+    borderRadius: 10,
+    backgroundColor: '#F1F0F0',
+    padding: 8,
+  },
   colorButton: {
     width: 25,
     height: 25,
@@ -202,19 +242,14 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     paddingHorizontal: 20,
   },
-  textInput: {
-    borderWidth: 1,
-    borderColor: '#ccc',
-    padding: 10,
-    borderRadius: 5,
-  },
   select: {
     borderRadius: 10,
     backgroundColor: '#F1F0F0',
     position: 'relative',
     paddingVertical: 8,
-    width: '40%',
-  }, selectOptions: {
+    width: '43%',
+  },
+  selectOptions: {
     position: 'absolute',
     bottom: 45,
     right: 20,
@@ -225,7 +260,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
     paddingTop: 10,
     zIndex: 999,
-    width: '40%',
+    width: '43%',
   },
 });
 
