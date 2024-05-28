@@ -20,9 +20,8 @@ const EmptyComponent = () => null;
 
 export default function App() {
   const [isModalVisible, setIsModalVisible] = useState(false);
-  const [token, setToken] = useState(null); // Initialize token state
 
-  //Create Task Modal
+  // Create Task Modal
   const handleCreateTaskPress = () => {
     setIsModalVisible(true);
   };
@@ -53,13 +52,12 @@ function AppContent({ handleCreateTaskPress, isModalVisible, handleCloseModal })
     setIsLoggedIn(true);
     setUsername(username);
     setToken(token);
-    console.log("Token:", token);
+    // console.log("Token:", token);
   };
   const handleLogout = () => {
     setIsLoggedIn(false);
     setUsername('');
     setToken('');
-
   };
 
   return (
@@ -100,8 +98,7 @@ function AppContent({ handleCreateTaskPress, isModalVisible, handleCloseModal })
               />
               <Tab.Screen
                 name="CreateTask"
-                component={EmptyComponent}
-                options={{
+                children={() => <CreateTaskModal username={username} token={token} />} options={{
                   tabBarButton: () => (
                     <CreateTaskButton onPress={handleCreateTaskPress} token={token} />
                   ),

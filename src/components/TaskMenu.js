@@ -17,7 +17,7 @@ const TaskMenu = ({ onEdit, onDelete }) => (
   >
     <MenuItem key="Edit" textValue="Edit" onPress={onEdit}>
       <MaterialIcons name="edit" size={18} color="#938989" />
-      <MenuItemLabel size="sm" ml={5} >Edit</MenuItemLabel>
+      <MenuItemLabel size="sm" ml={5}>Edit</MenuItemLabel>
     </MenuItem>
     <MenuItem key="Delete" textValue="Delete" onPress={onDelete}>
       <MaterialIcons name="delete" size={18} color="#938989" />
@@ -25,6 +25,7 @@ const TaskMenu = ({ onEdit, onDelete }) => (
     </MenuItem>
   </Menu>
 );
+
 const styles = StyleSheet.create({
   menu: {
     shadowColor: '#000',
@@ -37,4 +38,5 @@ const styles = StyleSheet.create({
     elevation: 5,
   },
 });
+
 export default TaskMenu;
