@@ -1,7 +1,7 @@
 import React, { useContext } from 'react';
 import { createStackNavigator } from "@react-navigation/stack";
 import Home from "../screens/Home";
-import Tasks from "../screens/Tasks";
+import AllTasks from "../screens/AllTasks";
 import ThemeContext from '../constants/ThemeContext';
 import { Ionicons } from "@expo/vector-icons";
 
@@ -18,7 +18,7 @@ function HomeStackScreen({ username, token }) {
       />
       <HomeStack.Screen
         name="Tasks"
-        children={(props) => <Tasks {...props} token={token} />}
+        children={(props) => <AllTasks {...props} token={token} />}
         options={{
           headerShown: true,
           headerBackImage: () => (

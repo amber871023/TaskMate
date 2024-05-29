@@ -3,6 +3,7 @@ import { Modal, TextInput, StyleSheet, TouchableOpacity, Platform } from 'react-
 import { HStack, View, Text, VStack } from "@gluestack-ui/themed";
 import AntDesign from '@expo/vector-icons/AntDesign';
 import DateTimePicker from '@react-native-community/datetimepicker';
+import moment from 'moment-timezone';
 
 const EditTaskModal = ({ visible, onClose, taskData, onSubmit }) => {
   const [title, setTitle] = useState(taskData.title || '');
@@ -30,9 +31,10 @@ const EditTaskModal = ({ visible, onClose, taskData, onSubmit }) => {
       return;
     }
     // Format the date to 'YYYY-MM-DD'
-    console.log("12", date);
-    date.setDate(date.getDate() + 1);
-    const formattedDate = date.toISOString().split('T')[0];
+    // date.setDate(date.getDate() + 1);
+    // const formattedDate = date.toISOString().split('T')[0];
+    const formattedDate = moment.utc(date).tz('Australia/Brisbane').format('YYYY-MM-DD');
+
     const editedTask = {
       id, title, color: selectedColor, priority, completed, date: formattedDate
     };

@@ -1,8 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import { Modal, TextInput, StyleSheet, TouchableOpacity, Alert, Platform } from 'react-native';
 import { HStack, View, Text, VStack, Button } from "@gluestack-ui/themed";
 import AntDesign from '@expo/vector-icons/AntDesign';
 import DateTimePicker from '@react-native-community/datetimepicker';
+import moment from 'moment-timezone';
+import { TasksContext } from '../constants/TasksContext';
+
 
 const CreateTaskModal = ({ visible, onClose, token }) => {
   const [title, setTitle] = useState('');
@@ -11,6 +14,7 @@ const CreateTaskModal = ({ visible, onClose, token }) => {
   const [priority, setPriority] = useState('');
   const [selectOpen, setSelectOpen] = useState(false);
   const [showDatePicker, setShowDatePicker] = useState(false);
+  const { fetchTasks } = useContext(TasksContext);
 
   const colors = ['#CE5263', '#FFB533', '#58AD60', '#62AAED', '#5275CE', '#B571FA'];
   const priorities = ['High', 'Medium', 'Low'];
@@ -34,7 +38,8 @@ const CreateTaskModal = ({ visible, onClose, token }) => {
     }
 
     // Format the date to 'YYYY-MM-DD'
-    const formattedDate = date.toISOString().split('T')[0];
+    //const formattedDate = date.toISOString().split('T')[0];
+    const formattedDate = moment.utc(date).tz('Australia/Brisbane').format('YYYY-MM-DD');
 
     // Create the task
     const task = { title, date: formattedDate, color: selectedColor, priority, completed: 0 };
@@ -56,7 +61,6 @@ const CreateTaskModal = ({ visible, onClose, token }) => {
       }
 
       const data = await response.json();
-      console.log('Task created:', data);
 
       // Clear the inputs
       setTitle('');
@@ -66,7 +70,7 @@ const CreateTaskModal = ({ visible, onClose, token }) => {
 
       // Close the modal
       onClose();
-
+      fetchTasks(token);
     } catch (error) {
       console.error(error);
       Alert.alert('Error', error.message);
