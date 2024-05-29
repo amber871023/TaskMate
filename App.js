@@ -14,6 +14,7 @@ import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import CreateTaskModal from './src/components/CreateTaskModal';
 import ThemeContext from './src/constants/ThemeContext';
 import Login from './src/screens/Login';
+import { TasksProvider } from './src/constants/TasksContext';
 
 const Tab = createBottomTabNavigator();
 const EmptyComponent = () => null;
@@ -65,54 +66,56 @@ function AppContent({ handleCreateTaskPress, isModalVisible, handleCloseModal })
       <View style={styles.container}>
         {Platform.OS === "ios" && <StatusBar barStyle="default" />}
         {isLoggedIn ? (
-          <NavigationContainer>
-            <Tab.Navigator
-              screenOptions={({ route }) => ({
-                tabBarIcon: ({ color, size }) => {
-                  let iconName;
-                  if (route.name === 'Home') {
-                    iconName = 'home';
-                  } else if (route.name === 'settings') {
-                    iconName = 'cog';
-                  }
-                  return <FontAwesome5 name={iconName} size={24} color={color} />;
-                },
-                tabBarActiveTintColor: '#FFC700',
-                tabBarInactiveTintColor: '#f8f8f8',
-                tabBarStyle: {
-                  backgroundColor: '#CE5263',
-                },
-                tabBarLabelStyle: {
-                  fontSize: 16,
-                  fontWeight: 'bold',
-                },
-                tabBarIconStyle: {
-                  marginTop: 5,
-                },
-              })}
-            >
-              <Tab.Screen
-                name="Home"
-                children={() => <HomeStack username={username} token={token} />}
-                options={{ headerShown: false }}
-              />
-              <Tab.Screen
-                name="CreateTask"
-                children={() => <CreateTaskModal username={username} token={token} />} options={{
-                  tabBarButton: () => (
-                    <CreateTaskButton onPress={handleCreateTaskPress} token={token} />
-                  ),
-                }}
-              />
-              <Tab.Screen
-                name="settings"
-                options={{ headerShown: false }} // Hide the header only for the Settings screen
+          <TasksProvider token={token}>
+            <NavigationContainer>
+              <Tab.Navigator
+                screenOptions={({ route }) => ({
+                  tabBarIcon: ({ color, size }) => {
+                    let iconName;
+                    if (route.name === 'Home') {
+                      iconName = 'home';
+                    } else if (route.name === 'settings') {
+                      iconName = 'cog';
+                    }
+                    return <FontAwesome5 name={iconName} size={24} color={color} />;
+                  },
+                  tabBarActiveTintColor: '#FFC700',
+                  tabBarInactiveTintColor: '#f8f8f8',
+                  tabBarStyle: {
+                    backgroundColor: '#CE5263',
+                  },
+                  tabBarLabelStyle: {
+                    fontSize: 16,
+                    fontWeight: 'bold',
+                  },
+                  tabBarIconStyle: {
+                    marginTop: 5,
+                  },
+                })}
               >
-                {props => <SettingsStack {...props} handleLogout={handleLogout} />}
-              </Tab.Screen>
-            </Tab.Navigator>
-            <CreateTaskModal visible={isModalVisible} onClose={handleCloseModal} token={token} />
-          </NavigationContainer>
+                <Tab.Screen
+                  name="Home"
+                  children={() => <HomeStack username={username} token={token} />}
+                  options={{ headerShown: false }}
+                />
+                <Tab.Screen
+                  name="CreateTask"
+                  children={() => <CreateTaskModal username={username} token={token} />} options={{
+                    tabBarButton: () => (
+                      <CreateTaskButton onPress={handleCreateTaskPress} token={token} />
+                    ),
+                  }}
+                />
+                <Tab.Screen
+                  name="settings"
+                  options={{ headerShown: false }} // Hide the header only for the Settings screen
+                >
+                  {props => <SettingsStack {...props} handleLogout={handleLogout} />}
+                </Tab.Screen>
+              </Tab.Navigator>
+              <CreateTaskModal visible={isModalVisible} onClose={handleCloseModal} token={token} />
+            </NavigationContainer>
+          </TasksProvider>
         ) : (
           <Login onLogin={handleLogin} />
         )}

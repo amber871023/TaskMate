@@ -6,68 +6,16 @@ import moment from 'moment';
 import { GlobalLayout } from "../constants/GlobalLayout";
 import ThemeContext from '../constants/ThemeContext';
 import TaskItem from '../components/TaskItem';
+import { TasksContext } from '../constants/TasksContext';
+
 
 function Home({ navigation, username, token }) {
   const { colorTheme, textSize } = useContext(ThemeContext);
-  const [selectedDate, setSelectedDate] = useState(moment().format('YYYY-MM-DD'));
-  const [tasks, setTasks] = useState({ todoTasks: [], completedTasks: [] });
-  const [markedDates, setMarkedDates] = useState({});
-
-  const basePlatformUrl = Platform.OS === 'android' ? 'http://10.0.2.2' : 'http://192.168.0.101';
-
-  const fetchTasks = async () => {
-    try {
-      const response = await fetch(`${basePlatformUrl}:3000/users/tasks`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-      if (response.status === 304) {
-        // Handle the case where the data has not been modified
-        console.log("Tasks not modified");
-        return;
-      }
-
-      const data = await response.json();
-      const taskMarkedDates = {};
-
-      data.forEach(task => {
-        const taskDate = moment(task.date).format('YYYY-MM-DD');
-        if (!taskMarkedDates[taskDate]) {
-          taskMarkedDates[taskDate] = { marked: true, dotColor: '#CE5263' };
-        }
-      });
-
-      const todoTasks = data.filter(task => {
-        const taskDate = moment(task.date).format('YYYY-MM-DD');
-        return !task.completed && taskDate === selectedDate;
-      });
-
-      const completedTasks = data.filter(task => {
-        const taskDate = moment(task.date).format('YYYY-MM-DD');
-        return task.completed && taskDate === selectedDate;
-      });
-
-      // Update the markedDates with the selectedDate marking
-      setMarkedDates({
-        ...taskMarkedDates,
-        [selectedDate]: {
-          selected: true,
-          selectedColor: '#FAB81B',
-          selectedTextColor: '#fff',
-          marked: true,
-        },
-      });
-      setTasks({ todoTasks, completedTasks });
-    } catch (error) {
-      console.error('Error fetching tasks on Home screen:', error);
-      Alert.alert('Error', 'Failed to fetch tasks. Please try again later.');
-    }
-  };
+  const { tasks, fetchTasks, markedDates, selectedDate, setSelectedDate } = useContext(TasksContext);
 
   useEffect(() => {
     if (token) {
-      fetchTasks();
+      fetchTasks(token);
     }
   }, [token, selectedDate]);
 
@@ -76,7 +24,7 @@ function Home({ navigation, username, token }) {
       item={item}
       textSize={textSize}
       token={token}
-      fetchTasks={fetchTasks}
+      onUpdate={() => fetchTasks(token)}
     />
   );
 
@@ -106,7 +54,7 @@ function Home({ navigation, username, token }) {
           onDayPress={(day) => setSelectedDate(day.dateString)}
           markedDates={markedDates}
           style={{ height: 310 }}
-          theme={{ todayTextColor: '#DB7C2E', selectedDayTextColor: '#DB7C2E', arrowColor: '#DB7C2E', textSectionTitleColor: '#CE5263' }}
+          theme={{ todayTextColor: '#CE5263', selectedDayTextColor: '#DB7C2E', arrowColor: '#DB7C2E', textSectionTitleColor: '#CE5263' }}
         />
       </View>
       {todoTasks.length > 0 ? (

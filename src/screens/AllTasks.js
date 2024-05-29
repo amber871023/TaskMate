@@ -4,45 +4,40 @@ import { View } from "@gluestack-ui/themed";
 import ThemeContext from '../constants/ThemeContext';
 import { TaskItem } from '../components/TaskItem';
 import TaskFilterButtons from '../components/TaskFilterButtons';
+import { TasksContext } from '../constants/TasksContext';
 
 function AllTasks({ token }) {
   const { colorTheme, textSize } = useContext(ThemeContext);
-
-  const basePlatformUrl = Platform.OS === 'android' ? 'http://10.0.2.2' : 'http://192.168.0.101';
-  const baseApiUrl = `${basePlatformUrl}:3000`;
-
+  const { fetchTasks, fetchFilteredTasks } = useContext(TasksContext);
   const [tasks, setTasks] = useState([]);
   const [filter, setFilter] = useState('todo'); // 'todo' or 'completed'
 
   useEffect(() => {
-    fetchTasks();
-  }, [filter]);
-
-  const fetchTasks = async () => {
-    try {
-      const response = await fetch(`${baseApiUrl}/users/tasks/${filter}`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-
-      if (!response.ok) {
-        throw new Error('Failed to fetch tasks');
-      }
-      let data = await response.json();
-      // Sort tasks by date in descending order
-      data = data.sort((a, b) => new Date(b.date) - new Date(a.date));
-      setTasks(data);
-    } catch (error) {
-      console.error('Error fetching all tasks:', error);
-      Alert.alert('Error', 'Failed to fetch tasks. Please try again later.');
+    if (token) {
+      handleFilterChange(filter);
+      fetchTasks(token);
     }
-  };
-
+  }, [token, filter]);
 
   const handleFilterChange = async (newFilter) => {
     setFilter(newFilter);
-    await fetchTasks(); // Wait for the tasks to be fetched before rendering
+    try {
+      const filteredTasks = await fetchFilteredTasks(newFilter);
+      setTasks(filteredTasks);
+    } catch (error) {
+      console.error('Error fetching filter tasks:', error);
+      Alert.alert('Error', 'Failed to fetch tasks. Please try again later.');
+    }
+  };
+  const handleTaskUpdate = async () => {
+    try {
+      const filteredTasks = await fetchFilteredTasks(filter);
+      setTasks(filteredTasks);
+      fetchTasks(token);
+    } catch (error) {
+      console.error('Error fetching filter tasks:', error);
+      Alert.alert('Error', 'Failed to fetch tasks. Please try again later.');
+    }
   };
 
   return (
@@ -60,7 +55,7 @@ function AllTasks({ token }) {
             item={item}
             textSize={textSize}
             token={token}
-            fetchTasks={fetchTasks}
+            onUpdate={handleTaskUpdate}
           />
         )}
         keyExtractor={(item) => item.id.toString()}

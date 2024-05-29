@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import { StyleSheet, TouchableOpacity, Platform, Alert } from 'react-native';
 import { Box, VStack, HStack, Text, Divider, Badge, BadgeText } from '@gluestack-ui/themed';
 import { Ionicons } from '@expo/vector-icons';
@@ -6,10 +6,14 @@ import TaskMenu from './TaskMenu';
 import textStyles from '../constants/textStyles';
 import moment from 'moment';
 import EditTaskModal from './EditTaskModal';
+import { TasksContext } from '../constants/TasksContext';
 
-export const TaskItem = ({ item, textSize, token, fetchTasks }) => {
+
+export const TaskItem = ({ item, textSize, token, onUpdate }) => {
   const [isEditModalVisible, setEditModalVisible] = useState(false);
   const [editedTask, setEditedTask] = useState({ ...item });
+  const { fetchTasks } = useContext(TasksContext);
+
 
   const openEditModal = () => {
     setEditedTask({ ...item });
@@ -28,11 +32,10 @@ export const TaskItem = ({ item, textSize, token, fetchTasks }) => {
         },
         body: JSON.stringify(updatedTask),
       });
-      console.log(updatedTask);
       if (response.ok) {
         Alert.alert('Success', 'Task updated successfully');
         setEditModalVisible(false);
-        fetchTasks();
+        onUpdate();
       }
     } catch (error) {
       console.error('Error updating task:', error);
@@ -58,7 +61,7 @@ export const TaskItem = ({ item, textSize, token, fetchTasks }) => {
       }
 
       setEditedTask(updatedTask);
-      fetchTasks();
+      onUpdate();
     } catch (error) {
       console.error('Error updating task completed status:', error);
       Alert.alert('Error', 'Failed to update task completion status. Please try again later.');
@@ -77,7 +80,8 @@ export const TaskItem = ({ item, textSize, token, fetchTasks }) => {
 
       if (response.ok) {
         Alert.alert('Success', 'Task deleted successfully');
-        fetchTasks();
+        fetchTasks(token);
+        onUpdate();
       } else {
         Alert.alert('Error', 'Failed to delete task');
       }
