@@ -31,7 +31,8 @@
     "react-native-web": "~0.19.10"
   },
   "devDependencies": {
-    "@babel/core": "^7.20.0"
+    "@babel/core": "^7.20.0",
+    "npm-license-crawler": "^0.2.1"
   },
   "private": true
 }

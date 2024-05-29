@@ -8,7 +8,6 @@ import moment from 'moment';
 import EditTaskModal from './EditTaskModal';
 import { TasksContext } from '../constants/TasksContext';
 
-
 export const TaskItem = ({ item, textSize, token, onUpdate }) => {
   const [isEditModalVisible, setEditModalVisible] = useState(false);
   const [editedTask, setEditedTask] = useState({ ...item });
@@ -19,12 +18,12 @@ export const TaskItem = ({ item, textSize, token, onUpdate }) => {
     setEditedTask({ ...item });
     setEditModalVisible(true);
   };
+  const basePlatformUrl = Platform.OS === 'android' ? 'http://10.0.2.2:3000' : 'http://192.168.0.101:3000';
 
-  const basePlatformUrl = Platform.OS === 'android' ? 'http://10.0.2.2' : 'http://192.168.0.101';
 
   const handleEditTask = async (updatedTask) => {
     try {
-      const response = await fetch(`${basePlatformUrl}:3000/users/tasks/${updatedTask.id}`, {
+      const response = await fetch(`${basePlatformUrl}/users/tasks/${updatedTask.id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -47,7 +46,7 @@ export const TaskItem = ({ item, textSize, token, onUpdate }) => {
     try {
       const updatedTask = { ...item, completed: !item.completed };
 
-      const response = await fetch(`${basePlatformUrl}:3000/users/tasks/${item.id}/completed`, {
+      const response = await fetch(`${basePlatformUrl}/users/tasks/${item.id}/completed`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -70,7 +69,7 @@ export const TaskItem = ({ item, textSize, token, onUpdate }) => {
 
   const handleDeleteTask = async () => {
     try {
-      const response = await fetch(`${basePlatformUrl}:3000/users/tasks/${item.id}`, {
+      const response = await fetch(`${basePlatformUrl}/users/tasks/${item.id}`, {
         method: 'DELETE',
         headers: {
           'Content-Type': 'application/json',

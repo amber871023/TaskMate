@@ -1,0 +1,74 @@
+{
+  "expo-status-bar@1.12.1": {
+    "licenses": "MIT",
+    "repository": "https://github.com/expo/expo",
+    "licenseUrl": "https://github.com/expo/expo",
+    "parents": "taskmate"
+  },
+  "expo@51.0.8": {
+    "licenses": "MIT",
+    "repository": "https://github.com/expo/expo",
+    "licenseUrl": "https://github.com/expo/expo",
+    "parents": "taskmate"
+  },
+  "moment-timezone@0.5.45": {
+    "licenses": "MIT",
+    "repository": "https://github.com/moment/moment-timezone",
+    "licenseUrl": "https://github.com/moment/moment-timezone/raw/master/LICENSE",
+    "parents": "taskmate"
+  },
+  "moment@2.30.1": {
+    "licenses": "MIT",
+    "repository": "https://github.com/moment/moment",
+    "licenseUrl": "https://github.com/moment/moment/raw/master/LICENSE",
+    "parents": "taskmate"
+  },
+  "npm-license-crawler@0.2.1": {
+    "licenses": "BSD-3-Clause",
+    "repository": "http://github.com/mwittig/npm-license-crawler",
+    "licenseUrl": "http://github.com/mwittig/npm-license-crawler/raw/master/LICENSE",
+    "parents": "taskmate"
+  },
+  "react-dom@18.2.0": {
+    "licenses": "MIT",
+    "repository": "https://github.com/facebook/react",
+    "licenseUrl": "https://github.com/facebook/react/raw/master/LICENSE",
+    "parents": "taskmate"
+  },
+  "react-native-calendars@1.1305.0": {
+    "licenses": "MIT",
+    "repository": "https://github.com/wix/react-native-calendars",
+    "licenseUrl": "https://github.com/wix/react-native-calendars/raw/master/LICENSE",
+    "parents": "taskmate"
+  },
+  "react-native-gesture-handler@2.16.2": {
+    "licenses": "MIT",
+    "repository": "https://github.com/software-mansion/react-native-gesture-handler",
+    "licenseUrl": "https://github.com/software-mansion/react-native-gesture-handler/raw/master/LICENSE",
+    "parents": "taskmate"
+  },
+  "react-native-safe-area-context@4.10.1": {
+    "licenses": "MIT",
+    "repository": "https://github.com/th3rdwave/react-native-safe-area-context",
+    "licenseUrl": "https://github.com/th3rdwave/react-native-safe-area-context/raw/master/LICENSE",
+    "parents": "taskmate"
+  },
+  "react-native-web@0.19.11": {
+    "licenses": "MIT",
+    "repository": "https://github.com/necolas/react-native-web",
+    "licenseUrl": "https://github.com/necolas/react-native-web/raw/master/LICENSE",
+    "parents": "taskmate"
+  },
+  "react-native@0.74.1": {
+    "licenses": "MIT",
+    "repository": "https://github.com/facebook/react-native",
+    "licenseUrl": "https://github.com/facebook/react-native/raw/master/LICENSE",
+    "parents": "taskmate"
+  },
+  "react@18.2.0": {
+    "licenses": "MIT",
+    "repository": "https://github.com/facebook/react",
+    "licenseUrl": "https://github.com/facebook/react/raw/master/LICENSE",
+    "parents": "taskmate"
+  }
+}

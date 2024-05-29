@@ -8,10 +8,30 @@ export default function Login({ onLogin }) {
   const [password, setPassword] = useState('');
   const [isRegister, setIsRegister] = useState(false); // Toggle between login and register
   const [email, setEmail] = useState('');
-  const basePlatformUrl = Platform.OS === 'android' ? 'http://10.0.2.2' : 'http://192.168.0.101';
+  const [errors, setErrors] = useState({});
+  const basePlatformUrl = Platform.OS === 'android' ? 'http://10.0.2.2:3000' : 'http://192.168.0.101:3000';
+
+  const validateForm = () => {
+    const newErrors = {};
+    // Validate username only if it's a registration
+    if (isRegister && !username) {
+      newErrors.username = 'Username is required';
+    }
+    if (!email || !/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(email)) {
+      newErrors.email = 'Please enter a valid email address';
+    }
+    if (!password || password.length < 6) {
+      newErrors.password = 'Password must be at least 6 characters long';
+    }
+    setErrors(newErrors);
+
+    return Object.keys(newErrors).length === 0; // Return true if no errors
+  };
+
 
   const handleSubmit = async () => {
-    const url = isRegister ? `${basePlatformUrl}:3000/users/register` : `${basePlatformUrl}:3000/users/login`;
+    if (!validateForm()) return;
+    const url = isRegister ? `${basePlatformUrl}/users/register` : `${basePlatformUrl}/users/login`;
 
     const payload = isRegister ? { username, password, email } : { email, password };
 
@@ -31,7 +51,6 @@ export default function Login({ onLogin }) {
         throw new Error(errorMessage);
 
       }
-
       onLogin({ username: data.username, token: data.token });
     } catch (error) {
       console.error(error);
@@ -44,26 +63,29 @@ export default function Login({ onLogin }) {
       <Box style={styles.container}>
         <Image source={require('../../assets/logo.png')} style={styles.logo} alt="logo" />
         <Text style={styles.title}>Welcome to TaskMate</Text>
+        {errors.name && <Text color='#CE5263' mb={5}>{errors.name}</Text>}
+        {isRegister && (
+          < TextInput
+            value={username}
+            onChangeText={setUsername}
+            placeholder="Username"
+            style={[styles.input, errors.username && styles.errorInput]}
+          />
+        )}
+        {errors.email && <Text color='#CE5263' mb={5}>{errors.email}</Text>}
         <TextInput
           value={email}
           onChangeText={setEmail}
           placeholder="Email"
-          style={styles.input}
+          style={[styles.input, errors.email && styles.errorInput]}
         />
-        {isRegister && (
-          <TextInput
-            value={username}
-            onChangeText={setUsername}
-            placeholder="Username"
-            style={styles.input}
-          />
-        )}
+        {errors.password && <Text color='#CE5263' mb={5}>{errors.password}</Text>}
         <TextInput
           value={password}
           onChangeText={setPassword}
           placeholder="Password"
           secureTextEntry
-          style={styles.input}
+          style={[styles.input, errors.password && styles.errorInput]}
         />
         <TouchableOpacity onPress={handleSubmit} style={styles.button}>
           <Text color='white' textAlign='center' fontWeight={'bold'} fontSize={20}>
@@ -107,6 +129,10 @@ const styles = StyleSheet.create({
     padding: 20,
     borderRadius: 8,
     backgroundColor: '#EDEBEB',
+  },
+  errorInput: {
+    borderColor: '#CE5263',
+    borderWidth: 2,
   },
   button: {
     backgroundColor: '#CE5263',

@@ -1,5 +1,5 @@
-import React, { useContext, useState, useEffect } from 'react';
-import { StyleSheet, FlatList, Platform, Alert } from 'react-native';
+import React, { useContext, useEffect } from 'react';
+import { StyleSheet, FlatList } from 'react-native';
 import { View, Text, HStack, Button, ButtonText } from "@gluestack-ui/themed";
 import { Calendar } from 'react-native-calendars';
 import moment from 'moment';
@@ -59,7 +59,7 @@ function Home({ navigation, username, token }) {
       </View>
       {todoTasks.length > 0 ? (
         <View height={'40%'} flex={1}>
-          <Text fontWeight={'bold'} fontSize={20} mb={10}>Todo Tasks</Text>
+          <Text fontWeight={'bold'} fontSize={20} mb={10} style={[{ color: colorTheme === 'dark' ? '#fff' : '#000' }]}>Todo Tasks</Text>
           <FlatList
             data={todoTasks}
             keyExtractor={(item) => item.id.toString()}
@@ -68,11 +68,11 @@ function Home({ navigation, username, token }) {
           />
         </View>
       ) : (
-        <Text textAlign='center' my={40}>No tasks for today</Text>
+        <Text fontSize={20} fontWeight={'bold'} textAlign='center' my={40} style={[{ color: colorTheme === 'dark' ? '#fff' : '#000' }]}>No tasks for today</Text>
       )}
       {completedTasks.length > 0 && (
         <View mt={10} flex={1}>
-          <Text fontWeight={'bold'} fontSize={20} mb={10}>Completed Tasks</Text>
+          <Text fontWeight={'bold'} fontSize={20} mb={10} style={[{ color: colorTheme === 'dark' ? '#fff' : '#000' }]}>Completed Tasks</Text>
           <FlatList
             data={completedTasks}
             keyExtractor={(item) => item.id.toString()}

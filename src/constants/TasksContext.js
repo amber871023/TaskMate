@@ -8,9 +8,7 @@ export const TasksProvider = ({ children, token }) => {
   const [tasks, setTasks] = useState({ todoTasks: [], completedTasks: [] });
   const [markedDates, setMarkedDates] = useState({});
   const [selectedDate, setSelectedDate] = useState(moment().format('YYYY-MM-DD'));
-
   const basePlatformUrl = Platform.OS === 'android' ? 'http://10.0.2.2:3000' : 'http://192.168.0.101:3000';
-
 
   const fetchTasks = async (token) => {
     try {

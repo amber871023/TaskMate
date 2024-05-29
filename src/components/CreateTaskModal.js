@@ -6,7 +6,6 @@ import DateTimePicker from '@react-native-community/datetimepicker';
 import moment from 'moment-timezone';
 import { TasksContext } from '../constants/TasksContext';
 
-
 const CreateTaskModal = ({ visible, onClose, token }) => {
   const [title, setTitle] = useState('');
   const [date, setDate] = useState(new Date());
@@ -18,10 +17,8 @@ const CreateTaskModal = ({ visible, onClose, token }) => {
 
   const colors = ['#CE5263', '#FFB533', '#58AD60', '#62AAED', '#5275CE', '#B571FA'];
   const priorities = ['High', 'Medium', 'Low'];
-
   const basePlatformUrl = Platform.OS === 'android' ? 'http://10.0.2.2' : 'http://192.168.0.101';
   const url = `${basePlatformUrl}:3000/users/tasks`;
-
   const handleSubmit = async () => {
     // Validate the inputs
     if (!title) {

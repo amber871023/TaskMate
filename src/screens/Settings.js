@@ -51,12 +51,15 @@ function Settings({ navigation, handleLogout }) {
         <FontAwesome name="angle-right" size={24} color="#CE5263" />
       </TouchableOpacity>
 
-      <View style={styles.setting}>
+      <TouchableOpacity
+        style={styles.setting}
+        onPress={() => navigation.navigate('OpenSourceLicenses')}
+      >
         <Text style={[currentTextSizeStyle, { color: colorTheme === 'dark' ? '#fff' : '#000' }]}>
           Open Source Licenses
         </Text>
         <FontAwesome name="angle-right" size={24} color="#CE5263" />
-      </View>
+      </TouchableOpacity>
 
       <TouchableOpacity
         style={styles.setting}
