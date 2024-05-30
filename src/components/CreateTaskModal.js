@@ -1,6 +1,6 @@
 import React, { useState, useContext } from 'react';
 import { Modal, TextInput, StyleSheet, TouchableOpacity, Alert, Platform } from 'react-native';
-import { HStack, View, Text, VStack, Button } from "@gluestack-ui/themed";
+import { HStack, View, Text, VStack } from "@gluestack-ui/themed";
 import AntDesign from '@expo/vector-icons/AntDesign';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import moment from 'moment-timezone';
@@ -40,7 +40,6 @@ const CreateTaskModal = ({ visible, onClose, token }) => {
 
     // Create the task
     const task = { title, date: formattedDate, color: selectedColor, priority, completed: 0 };
-
     try {
       const response = await fetch(url, {
         method: 'POST',
@@ -58,7 +57,6 @@ const CreateTaskModal = ({ visible, onClose, token }) => {
       }
 
       const data = await response.json();
-
       // Clear the inputs
       setTitle('');
       setDate(new Date());
@@ -73,7 +71,7 @@ const CreateTaskModal = ({ visible, onClose, token }) => {
       Alert.alert('Error', error.message);
     }
   };
-
+  // handle date change
   const handleDateChange = (event, selectedDate) => {
     if (Platform.OS === 'android') {
       if (event.type === 'set') {
@@ -98,7 +96,6 @@ const CreateTaskModal = ({ visible, onClose, token }) => {
         <View style={styles.modalContent}>
           <HStack style={styles.modalHeader}>
             <Text style={styles.modalTitle}>Create Task</Text>
-
             <TouchableOpacity onPress={onClose} padding={10}>
               <AntDesign name="closesquareo" size={24} color="#938989" />
             </TouchableOpacity>
@@ -113,6 +110,7 @@ const CreateTaskModal = ({ visible, onClose, token }) => {
               style={styles.textInput}
             />
           </VStack>
+          {/* Choose Date and set up DatePicker based on different platform*/}
           <HStack alignItems='center' justifyContent='space-between' mb={20}>
             <Text fontWeight={'bold'}>Date</Text>
             {Platform.OS === 'android' && (
@@ -136,6 +134,7 @@ const CreateTaskModal = ({ visible, onClose, token }) => {
               />
             )}
           </HStack>
+          {/* Choose Color */}
           <HStack alignItems='center' justifyContent='space-between' mb={10}>
             <Text fontWeight={'bold'}>Color</Text>
             <HStack justifyContent="space-between" mb={10}>
@@ -152,6 +151,7 @@ const CreateTaskModal = ({ visible, onClose, token }) => {
               ))}
             </HStack>
           </HStack>
+          {/* Choose Priority */}
           <HStack alignItems='center' justifyContent='space-between' mb={20}>
             <Text fontWeight={'bold'}>Priority</Text>
             <TouchableOpacity onPress={() => setSelectOpen(!selectOpen)} style={styles.select}>

@@ -79,6 +79,7 @@ const EditTaskModal = ({ visible, onClose, taskData, onSubmit }) => {
               fontSize={20}
             />
           </VStack>
+          {/* Choose Date and set up DatePicker based on different platform*/}
           <HStack alignItems='center' justifyContent='space-between' mb={20}>
             <Text fontWeight={'bold'}>Date</Text>
             {Platform.OS === 'android' && (
@@ -102,6 +103,7 @@ const EditTaskModal = ({ visible, onClose, taskData, onSubmit }) => {
               />
             )}
           </HStack>
+          {/* Choose Color */}
           <HStack alignItems='center' justifyContent='space-between' mb={10}>
             <Text fontWeight={'bold'}>Color</Text>
             <HStack justifyContent="space-between" mb={10}>
@@ -118,6 +120,7 @@ const EditTaskModal = ({ visible, onClose, taskData, onSubmit }) => {
               ))}
             </HStack>
           </HStack>
+          {/* Choose Priority */}
           <HStack alignItems='center' justifyContent='space-between' mb={20}>
             <Text fontWeight={'bold'}>Priority</Text>
             <TouchableOpacity onPress={() => setSelectOpen(!selectOpen)} style={styles.select}>
@@ -142,8 +145,7 @@ const EditTaskModal = ({ visible, onClose, taskData, onSubmit }) => {
           <HStack alignSelf='flex-end' mt={50}>
             <TouchableOpacity
               style={styles.saveButton}
-              onPress={saveChanges}
-            >
+              onPress={saveChanges}>
               <Text color='white' textAlign='center' fontWeight={'bold'}>Save</Text>
             </TouchableOpacity>
           </HStack>

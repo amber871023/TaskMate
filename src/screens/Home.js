@@ -13,6 +13,7 @@ function Home({ navigation, username, token }) {
   const { colorTheme, textSize } = useContext(ThemeContext);
   const { tasks, fetchTasks, markedDates, selectedDate, setSelectedDate } = useContext(TasksContext);
 
+  // Fetch tasks on initial render
   useEffect(() => {
     if (token) {
       fetchTasks(token);
@@ -24,7 +25,7 @@ function Home({ navigation, username, token }) {
       item={item}
       textSize={textSize}
       token={token}
-      onUpdate={() => fetchTasks(token)}
+      onUpdate={() => fetchTasks(token)}// Update tasks after edting or completing a task
     />
   );
 
@@ -37,6 +38,7 @@ function Home({ navigation, username, token }) {
         <Text style={[{ color: colorTheme === 'dark' ? '#fff' : '#000' }]} fontWeight={'bold'} fontSize={20}>
           {moment(selectedDate).isSame(moment(), 'day') ? "Today's Tasks" : `Tasks on ${moment(selectedDate).format('DD, MMM')}`}
         </Text>
+        {/* All tasks button navigate to AllTasks screen */}
         <Button
           variant="solid"
           bgColor="#FAB81B"
@@ -48,6 +50,7 @@ function Home({ navigation, username, token }) {
           <ButtonText fontSize={16} color="white" textAlign="center">All Tasks</ButtonText>
         </Button>
       </HStack>
+      {/* Calendar component to select date */}
       <View style={{ borderRadius: 15, overflow: 'hidden' }} mb={10}>
         <Calendar
           current={selectedDate}
@@ -57,6 +60,7 @@ function Home({ navigation, username, token }) {
           theme={{ todayTextColor: '#CE5263', selectedDayTextColor: '#DB7C2E', arrowColor: '#DB7C2E', textSectionTitleColor: '#CE5263' }}
         />
       </View>
+      {/* Display tasks based on selected date and todo/completed */}
       {todoTasks.length > 0 ? (
         <View height={'40%'} flex={1}>
           <Text fontWeight={'bold'} fontSize={20} mb={10} style={[{ color: colorTheme === 'dark' ? '#fff' : '#000' }]}>Todo Tasks</Text>

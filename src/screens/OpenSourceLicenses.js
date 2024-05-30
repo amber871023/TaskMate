@@ -8,13 +8,13 @@ import licenses from '../../licenses.json'; // Adjust the path as necessary
 function OpenSourceLicenses() {
   const { colorTheme, textSize } = useContext(ThemeContext);
   const [licenseData, setLicenseData] = useState([]);
-
+  // Load license data from JSON file
   useEffect(() => {
     setLicenseData(licenses);
   }, []);
 
   const currentTextSizeStyle = textSize === 'Small' ? textStyles.smallText : textStyles.largeText;
-
+  // Open the link in the browser
   const handleLinkPress = (url) => {
     Linking.openURL(url);
   };

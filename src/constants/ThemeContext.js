@@ -16,13 +16,13 @@ export const ThemeProvider = ({ children }) => {
       if (storedTextSize) setTextSize(storedTextSize);
     })();
   }, []);
-
+  // Save theme and text size to storage
   const toggleColorTheme = async () => {
     const newTheme = colorTheme === 'light' ? 'dark' : 'light';
     setColorTheme(newTheme);
     await AsyncStorage.setItem('theme', newTheme);
   };
-
+  // Toggle text size
   const toggleTextSize = async () => {
     const newSize = textSize === 'Small' ? 'Large' : 'Small';
     setTextSize(newSize);

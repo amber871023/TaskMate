@@ -60,7 +60,7 @@ function Settings({ navigation, handleLogout }) {
         </Text>
         <FontAwesome name="angle-right" size={24} color="#CE5263" />
       </TouchableOpacity>
-
+      {/* Log out */}
       <TouchableOpacity
         style={styles.setting}
         onPress={handleLogout}

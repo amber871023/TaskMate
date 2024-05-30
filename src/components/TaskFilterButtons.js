@@ -2,6 +2,7 @@ import React from 'react';
 import { Text, View } from "@gluestack-ui/themed";
 import { StyleSheet, TouchableOpacity } from 'react-native';
 
+// FilterButton component
 const FilterButton = ({ onPress, isSelected, buttonText }) => (
   <TouchableOpacity onPress={onPress} style={[styles.filterButton, isSelected && styles.activeFilterButton]}>
     <Text style={[styles.filterButtonText, isSelected && styles.activeFilterButtonText]}>{buttonText}</Text>

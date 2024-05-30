@@ -10,7 +10,7 @@ export default function Login({ onLogin }) {
   const [email, setEmail] = useState('');
   const [errors, setErrors] = useState({});
   const basePlatformUrl = Platform.OS === 'android' ? 'http://10.0.2.2:3000' : 'http://192.168.0.101:3000';
-
+  // Validate the form
   const validateForm = () => {
     const newErrors = {};
     // Validate username only if it's a registration
@@ -24,15 +24,14 @@ export default function Login({ onLogin }) {
       newErrors.password = 'Password must be at least 6 characters long';
     }
     setErrors(newErrors);
-
     return Object.keys(newErrors).length === 0; // Return true if no errors
   };
 
-
+  // Handle form submission (login or register)
   const handleSubmit = async () => {
     if (!validateForm()) return;
     const url = isRegister ? `${basePlatformUrl}/users/register` : `${basePlatformUrl}/users/login`;
-
+    // Prepare the payload
     const payload = isRegister ? { username, password, email } : { email, password };
 
     try {
@@ -51,7 +50,7 @@ export default function Login({ onLogin }) {
         throw new Error(errorMessage);
 
       }
-      onLogin({ username: data.username, token: data.token });
+      onLogin({ username: data.username, token: data.token });// Pass the username and token to the parent component
     } catch (error) {
       console.error(error);
       Alert.alert('Error', error.message);
@@ -63,6 +62,7 @@ export default function Login({ onLogin }) {
       <Box style={styles.container}>
         <Image source={require('../../assets/logo.png')} style={styles.logo} alt="logo" />
         <Text style={styles.title}>Welcome to TaskMate</Text>
+        {/*  Username */}
         {errors.name && <Text color='#CE5263' mb={5}>{errors.name}</Text>}
         {isRegister && (
           < TextInput
@@ -72,6 +72,7 @@ export default function Login({ onLogin }) {
             style={[styles.input, errors.username && styles.errorInput]}
           />
         )}
+        {/* Email */}
         {errors.email && <Text color='#CE5263' mb={5}>{errors.email}</Text>}
         <TextInput
           value={email}
@@ -79,6 +80,7 @@ export default function Login({ onLogin }) {
           placeholder="Email"
           style={[styles.input, errors.email && styles.errorInput]}
         />
+        {/* Password */}
         {errors.password && <Text color='#CE5263' mb={5}>{errors.password}</Text>}
         <TextInput
           value={password}
@@ -87,11 +89,13 @@ export default function Login({ onLogin }) {
           secureTextEntry
           style={[styles.input, errors.password && styles.errorInput]}
         />
+        {/* Submit login/register button */}
         <TouchableOpacity onPress={handleSubmit} style={styles.button}>
           <Text color='white' textAlign='center' fontWeight={'bold'} fontSize={20}>
             {isRegister ? "Register" : "Login"}
           </Text>
         </TouchableOpacity>
+        {/* Toggle between login and register */}
         <View style={styles.toggleContainer}>
           <Text>{isRegister ? "Already have an account?" : "Don't have an account?"}</Text>
           <Button onPress={() => setIsRegister(!isRegister)} bgColor='transparent'>

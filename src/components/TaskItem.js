@@ -13,14 +13,13 @@ export const TaskItem = ({ item, textSize, token, onUpdate }) => {
   const [editedTask, setEditedTask] = useState({ ...item });
   const { fetchTasks } = useContext(TasksContext);
 
-
   const openEditModal = () => {
     setEditedTask({ ...item });
     setEditModalVisible(true);
   };
   const basePlatformUrl = Platform.OS === 'android' ? 'http://10.0.2.2:3000' : 'http://192.168.0.101:3000';
 
-
+  // Update the task on the server
   const handleEditTask = async (updatedTask) => {
     try {
       const response = await fetch(`${basePlatformUrl}/users/tasks/${updatedTask.id}`, {
@@ -41,7 +40,7 @@ export const TaskItem = ({ item, textSize, token, onUpdate }) => {
       Alert.alert('Error', 'Failed to update task');
     }
   };
-
+  // Update the task completion status
   const handleTaskCompletion = async () => {
     try {
       const updatedTask = { ...item, completed: !item.completed };
@@ -58,15 +57,14 @@ export const TaskItem = ({ item, textSize, token, onUpdate }) => {
       if (!response.ok) {
         throw new Error('Failed to update task completed status');
       }
-
       setEditedTask(updatedTask);
-      onUpdate();
+      onUpdate(); // Fetch the updated tasks
     } catch (error) {
       console.error('Error updating task completed status:', error);
       Alert.alert('Error', 'Failed to update task completion status. Please try again later.');
     }
   };
-
+  // Delete the task
   const handleDeleteTask = async () => {
     try {
       const response = await fetch(`${basePlatformUrl}/users/tasks/${item.id}`, {
@@ -80,7 +78,7 @@ export const TaskItem = ({ item, textSize, token, onUpdate }) => {
       if (response.ok) {
         Alert.alert('Success', 'Task deleted successfully');
         fetchTasks(token);
-        onUpdate();
+        onUpdate(); // Fetch the updated tasks
       } else {
         Alert.alert('Error', 'Failed to delete task');
       }
@@ -93,6 +91,7 @@ export const TaskItem = ({ item, textSize, token, onUpdate }) => {
   return (
     <Box style={styles.taskContainer} mb={10}>
       <HStack mb={10} backgroundColor='white' borderRadius={15}>
+        {/* Task color bar */}
         <Box w={'2%'} style={[styles.colorBar, { backgroundColor: item.color }]} />
         <VStack w={'97%'} p={10}>
           <HStack justifyContent='space-between' alignItems='center'>
@@ -111,6 +110,7 @@ export const TaskItem = ({ item, textSize, token, onUpdate }) => {
             <TaskMenu onEdit={openEditModal} onDelete={handleDeleteTask} />
           </HStack>
           <Divider my="$1.5" />
+          {/* Task priority and date */}
           <HStack justifyContent='space-between' alignItems='center' mx={5}>
             <Badge size="md" variant="solid" borderRadius="$none" action={item.priority === 'High' ? 'error' : item.priority === 'Medium' ? 'warning' : 'info'}>
               <BadgeText action="warning"> {item.priority} </BadgeText>
@@ -119,7 +119,6 @@ export const TaskItem = ({ item, textSize, token, onUpdate }) => {
           </HStack>
         </VStack>
       </HStack>
-
       <EditTaskModal
         visible={isEditModalVisible}
         onClose={() => setEditModalVisible(false)}

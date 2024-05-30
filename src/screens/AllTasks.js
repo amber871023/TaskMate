@@ -12,6 +12,7 @@ function AllTasks({ token }) {
   const [tasks, setTasks] = useState([]);
   const [filter, setFilter] = useState('todo'); // 'todo' or 'completed'
 
+  // Fetch tasks on initial render
   useEffect(() => {
     if (token) {
       handleFilterChange(filter);
@@ -19,6 +20,7 @@ function AllTasks({ token }) {
     }
   }, [token, filter]);
 
+  // Fetch tasks based on filter
   const handleFilterChange = async (newFilter) => {
     setFilter(newFilter);
     try {
@@ -29,6 +31,7 @@ function AllTasks({ token }) {
       Alert.alert('Error', 'Failed to fetch tasks. Please try again later.');
     }
   };
+  // Update tasks after task completion
   const handleTaskUpdate = async () => {
     try {
       const filteredTasks = await fetchFilteredTasks(filter);
