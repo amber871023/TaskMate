@@ -16,6 +16,7 @@ const EditTaskModal = ({ visible, onClose, taskData, onSubmit }) => {
   const [showDatePicker, setShowDatePicker] = useState(false);
 
   const colors = ['#CE5263', '#FFB533', '#58AD60', '#62AAED', '#5275CE', '#B571FA'];
+  const priorities = ['High', 'Medium', 'Low'];
 
   const saveChanges = () => {
     if (!title) {
