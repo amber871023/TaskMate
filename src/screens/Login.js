@@ -21,7 +21,7 @@ export default function Login({ onLogin }) {
       newErrors.email = 'Please enter a valid email address';
     }
     if (!password || password.length < 6) {
-      newErrors.password = 'Password must be at least 6 characters long';
+      newErrors.password = 'Password must be at least 6 characters';
     }
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0; // Return true if no errors
@@ -29,7 +29,7 @@ export default function Login({ onLogin }) {
 
   // Handle form submission (login or register)
   const handleSubmit = async () => {
-    if (!validateForm()) return;
+    if (validateForm());
     const url = isRegister ? `${basePlatformUrl}/users/register` : `${basePlatformUrl}/users/login`;
     // Prepare the payload
     const payload = isRegister ? { username, password, email } : { email, password };
