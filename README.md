@@ -49,4 +49,4 @@ If you encounter any issues while using TaskMate, please report them on our GitH
 
 
 ## License
-TaskMate is licensed under the MIT License.
+TaskMate is licensed under the [MIT License](https://github.com/amber871023/TaskMate/blob/main/LICENSE).
