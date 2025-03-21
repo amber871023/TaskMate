@@ -15,6 +15,7 @@ import CreateTaskModal from './src/components/CreateTaskModal';
 import ThemeContext from './src/constants/ThemeContext';
 import Login from './src/screens/Login';
 import { TasksProvider } from './src/constants/TasksContext';
+import { SafeAreaProvider } from 'react-native-safe-area-context';
 
 const Tab = createBottomTabNavigator();
 const EmptyComponent = () => null;
@@ -31,15 +32,17 @@ export default function App() {
   };
 
   return (
-    <GluestackUIProvider config={config}>
-      <ThemeProvider>
-        <AppContent
-          handleCreateTaskPress={handleCreateTaskPress}
-          isModalVisible={isModalVisible}
-          handleCloseModal={handleCloseModal}
-        />
-      </ThemeProvider>
-    </GluestackUIProvider>
+    <SafeAreaProvider> {/* Wrap the app in SafeAreaProvider to show on web */}
+      <GluestackUIProvider config={config}>
+        <ThemeProvider>
+          <AppContent
+            handleCreateTaskPress={handleCreateTaskPress}
+            isModalVisible={isModalVisible}
+            handleCloseModal={handleCloseModal}
+          />
+        </ThemeProvider>
+      </GluestackUIProvider>
+    </SafeAreaProvider>
   );
 }
 
@@ -47,13 +50,12 @@ function AppContent({ handleCreateTaskPress, isModalVisible, handleCloseModal })
   const { colorTheme } = useContext(ThemeContext);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [username, setUsername] = useState('');
-  const [token, setToken] = useState(''); // Initialize token state
+  const [token, setToken] = useState('');
 
   const handleLogin = ({ username, token }) => {
     setIsLoggedIn(true);
     setUsername(username);
     setToken(token);
-    // console.log("Token:", token);
   };
   const handleLogout = () => {
     setIsLoggedIn(false);
